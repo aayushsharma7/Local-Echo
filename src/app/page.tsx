@@ -11,12 +11,14 @@ import { Moon, Sun } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Camera, Eye, Shield, Zap,ThumbsUp, Clock, CheckCircle, Quote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Image from 'next/image';
+import Link from 'next/link';
 const LandingPage = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navItems = [
     
 
-    { label: "How It Works", href: "#how-it-works" },
+    { label: "Guide", href: "#how-it-works" },
     { label: "Features", href: "#features" },
     { label: "Testimonials", href: "#testimonials" },
   ];
@@ -224,12 +226,29 @@ const LandingPage = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-semibold text-foreground">Local Echo</span>
+          <div className="flex items-center space-x-2 -ml-3 md:-ml-0">
+            
+            <Image
+              src="/logo4.png"        // path to your transparent PNG in /public
+              alt="LocalEcho Logo"
+              width={62}             // increase size as needed
+              height={62}
+              className="object-contain md:-mr-2"
+            />
+            <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
+              <Link href="#front-page">
+              Local{" "}
+              </Link>
+              <span className='text-gradient'>
+                <Link href="#front-page">
+                Echo
+                </Link>
+              </span>
+              
+              </span>
           </div>
+
+
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8 ml-23">
@@ -265,8 +284,8 @@ const LandingPage = () => {
               <Button variant="ghost" size="sm">
                 Sign In
               </Button>
-              <Button size="sm" className="hero-bg text-primary-foreground">
-                Get Started
+              <Button asChild size="sm" className="hero-bg text-primary-foreground">
+                <Link href="#get-started">Get Started</Link>
               </Button>
             </div>
 
@@ -303,8 +322,9 @@ const LandingPage = () => {
                 <Button variant="ghost" size="sm">
                   Sign In
                 </Button>
-                <Button size="sm" className="hero-bg text-primary-foreground">
-                  Get Started
+                
+                <Button asChild size="sm" className="hero-bg text-primary-foreground">
+                  <Link href="#get-started" onClick={() => setIsMenuOpen(false)}>Get Started</Link>
                 </Button>
               </div>
             </nav>
@@ -316,7 +336,7 @@ const LandingPage = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/10" />
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
       <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-accent/20 rounded-full blur-2xl animate-pulse delay-1000" />
-     <section className="relative min-h-screen pt-20 pb-16 overflow-hidden md:ml-7 md:mr-7">
+     <section id="front-page" className=" relative min-h-screen pt-20 pb-16 overflow-hidden md:ml-7 md:mr-7">
       
       
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -421,18 +441,16 @@ const LandingPage = () => {
       </div>
     </section>
     
-      <section id="how-it-works" className="py-20 bg-gradient-to-b from-background to-surface-soft md:ml-7 md:mr-7 md:-mt-0 -mt-17">
+      <section id="how-it-works" className="md:scroll-mt-10 scroll-mt-5 py-20 bg-gradient-to-b from-background to-surface-soft md:ml-7 md:mr-7 md:-mt-0 -mt-17">
         
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center space-y-4 mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
-            How{" "} 
-            
-            <span className='text-gradient bg-gradient-to-r from-primary to-primary/60'>
-                Local Echo
-            </span> 
-            {" "}Works
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight drop-shadow-xl">
+            3-Step {" "}
+            <span className="text-gradient bg-gradient-to-r from-primary to-primary/60">
+              Guide
+            </span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Making your voice heard in your community is as simple as 1-2-3
@@ -493,7 +511,7 @@ const LandingPage = () => {
         {/* Section Header */}
         <div className="text-center space-y-6 mb-20 z-10">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-            ✨ Why Choose LocalEcho
+            ✨ Why Choose Local Echo
           </div>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight drop-shadow-xl">
             Built for{" "}
@@ -589,17 +607,11 @@ const LandingPage = () => {
           <div className="relative">
             <Card className="p-8  dark:bg-gray-900/60">
               <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl relative overflow-hidden">
-                {/* Map Background Pattern */}
-                <div className="absolute inset-0 opacity-20">
-                  <svg className="w-full h-full" viewBox="0 0 400 300">
-                    <defs>
-                      <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5"/>
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#grid)" />
-                  </svg>
-                </div>
+                {/* Map Background Image */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-100"
+                  style={{ backgroundImage: "url('/map-preview.png')" }} // replace with actual path
+                />
 
                 {/* Issue Pins */}
                 <div className="absolute top-1/4 left-1/3 transform -translate-x-1/2 -translate-y-1/2">
@@ -704,7 +716,7 @@ const LandingPage = () => {
         </div>
       </div>
     </section>
-    <section id="testimonials" className="py-20 bg-gradient-to-b from-background to-surface-soft md:-mt-0 -mt-17">
+    <section id="testimonials" className="md:scroll-mt-10 scroll-mt-5 py-20 bg-gradient-to-b from-background to-surface-soft md:-mt-0 -mt-17">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center space-y-4 mb-16">
@@ -785,7 +797,7 @@ const LandingPage = () => {
         </div>
       </div>
     </section>
-    <section className="py-32 relative overflow-hidden">
+    <section id="get-started" className="md:-scroll-mt-15 -scroll-mt-0 py-32 relative overflow-hidden">
       {/* Ambient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary-glow/5" />
       
@@ -801,7 +813,7 @@ const LandingPage = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary-glow/20 to-primary/20 rounded-[2rem] blur-2xl opacity-60" />
             
             {/* Card */}
-            <div className="relative bg-background/80 backdrop-blur-xl border border-border/50 rounded-[2rem] p-12 md:p-16 text-center">
+            <div className=" relative bg-background/80 backdrop-blur-xl border border-border/50 rounded-[2rem] p-12 md:p-16 text-center">
               {/* Floating badge */}
               <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-primary/10 to-primary-glow/10 border border-primary/20 text-primary px-6 py-3 rounded-full text-sm font-semibold mb-8 relative">
                 <Sparkles className="w-4 h-4" />
@@ -902,12 +914,22 @@ const LandingPage = () => {
           {/* Brand Section */}
           <div className="lg:col-span-2 space-y-6 md:ml-7">
             {/* Logo */}
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-semibold text-foreground">LocalEcho</span>
-            </div>
+            <div className="flex items-center space-x-2 -ml-4 -mt-5 mb-1">
+            <Image
+              src="/logo4.png"        // path to your transparent PNG in /public
+              alt="LocalEcho Logo"
+              width={62}             // increase size as needed
+              height={62}
+              className="object-contain md:-mr-2"
+            />
+            <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
+              Local{" "}
+              <span className='text-gradient'>
+                Echo
+              </span>
+              
+              </span>
+          </div>
 
             {/* Description */}
             <p className="text-muted-foreground leading-relaxed max-w-md">
