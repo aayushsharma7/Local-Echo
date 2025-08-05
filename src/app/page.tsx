@@ -535,7 +535,7 @@ const LandingPage = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               
               {/* Card */}
-              <div className="relative h-full p-8 bg-background/80 backdrop-blur-sm border border-border/50 rounded-3xl hover:border-border transition-all duration-500 group-hover:translate-y-[-4px]">
+              <div className="card-soft dark:bg-gray-900/30 relative h-full p-8 bg-background/80 backdrop-blur-sm border border-border/50 rounded-3xl hover:border-border transition-all duration-500 group-hover:translate-y-[-4px]">
                 {/* Icon */}
                 <div className={`relative w-14 h-14 ${feature.bgColor} ${feature.darkBgColor} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
                   <feature.icon className={`w-7 h-7 ${feature.color}`} />
