@@ -6,6 +6,8 @@ import Features from "@/components/Features";
 import Issues from "@/components/Issues";
 import Testimonials from "@/components/Testimonials";
 import Hero from "@/components/Hero";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 const LandingPage = () => {
   const [darkMode, setDarkMode] = useState(false);
   // Initialize theme from localStorage or system preference
@@ -38,6 +40,7 @@ const LandingPage = () => {
   return (
     <div>
       {/* header */}
+      <Header />
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-accent/10" />
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-pulse" />
@@ -47,6 +50,7 @@ const LandingPage = () => {
       <Features />
       <Issues />
       <Testimonials />
+      <Footer />
     </div>
   );
 };

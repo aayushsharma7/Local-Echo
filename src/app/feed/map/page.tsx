@@ -1,28 +1,19 @@
+
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import Image from "next/image";
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
   CardDescription
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ThumbsUp, MessageCircle, Share2, Tag, MoreHorizontal, MapPin, Layers, Minus, SlidersHorizontal, Rss, User, Bell, LogOut, Settings, FileText } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { MapPin, Plus, Minus, Layers, User, Bell, LogOut, Settings, FileText, Rss, List, PlusCircle, Send } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   Dialog,
@@ -35,6 +26,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { UploadCloud } from "lucide-react";
 import type { DialogProps } from "@radix-ui/react-dialog";
 import Link from "next/link";
@@ -48,32 +46,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LocalEchoLogo } from "@/components/icons";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Separator } from "@/components/ui/separator";
-import { TrendingUp, CheckCircle } from "lucide-react";
+import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 
+
 // --- INLINED COMPONENTS ---
-
-// public/icons.tsx
-function AppLogo(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M12 8c-2.209 0-4 1.791-4 4s1.791 4 4 4 4-1.791 4-4-1.791-4-4-4z" />
-      <path d="M12 2a10 10 0 00-7.53 16.59" />
-      <path d="M21.53 9.41a10 10 0 00-16.12-.02" />
-    </svg>
-  );
-}
-
 
 // Header Component
 const navLinks = [
@@ -146,145 +123,6 @@ function AppHeader() {
   );
 }
 
-// Issue Feed Components
-const issues = [
-  {
-    id: 1,
-    user: { name: "Jane Cooper", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" },
-    description: "Huge pothole at the intersection of Oak & Maple. Multiple cars have been hit. Needs immediate attention from the city.",
-    image: "/placeho.png",
-    imageHint: "pothole road",
-    tags: ["pothole", "danger"],
-    location: "Oak & Maple St",
-    time: "2h ago",
-    upvotes: 128,
-    comments: 12,
-    specialBadge: "Live"
-  },
-  {
-    id: 2,
-    user: { name: "Robert Fox", avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d" },
-    description: "Overflowing trash cans at Central Park near the playground. It's becoming a health hazard for kids and families.",
-    image: null,
-    imageHint: "",
-    tags: ["trash", "park"],
-    location: "Central Park",
-    time: "8h ago",
-    upvotes: 45,
-    comments: 5,
-    specialBadge: null,
-  },
-  {
-    id: 3,
-    user: { name: "City Works", avatar: "https://i.pravatar.cc/150?u=cityworks" },
-    description: "Streetlight outage reported on 5th Avenue between Pine and Elm has been resolved. Our team replaced the faulty bulb this morning.",
-    image: "/placeho.png",
-    imageHint: "street light",
-    tags: ["streetlight", "resolved"],
-    location: "5th Avenue",
-    time: "1d ago",
-    upvotes: 210,
-    comments: 34,
-    specialBadge: "Verified Authority",
-  },
-];
-
-function FeedFilters() {
-  return (
-    <Card className="mb-4 bg-card/60 backdrop-blur-sm border-border/50">
-        <CardContent className="p-3 flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-                <Rss className="w-5 h-5 text-primary" />
-                <h2 className="text-lg font-headline font-semibold">Community Feed</h2>
-            </div>
-            <div className="flex items-center gap-2">
-                <Select defaultValue="recent">
-                    <SelectTrigger className="w-[150px] text-xs h-8">
-                        <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="recent">Most Recent</SelectItem>
-                        <SelectItem value="upvoted">Most Upvoted</SelectItem>
-                        <SelectItem value="nearby">Nearby</SelectItem>
-                    </SelectContent>
-                </Select>
-                <Button variant="outline" size="icon" className="h-8 w-8">
-                    <SlidersHorizontal className="h-4 w-4" />
-                </Button>
-            </div>
-        </CardContent>
-    </Card>
-  );
-}
-
-function IssueFeed() {
-  return (
-    <div className="w-full">
-      <FeedFilters />
-      <div className="space-y-4">
-        {issues.map((issue) => (
-          <Card key={issue.id} className="bg-card/60 backdrop-blur-sm border-border/50 overflow-hidden">
-            <CardHeader className="p-4">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarImage src={issue.user.avatar} alt={issue.user.name} />
-                    <AvatarFallback>{issue.user.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-semibold">{issue.user.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {issue.location} &middot; {issue.time}
-                    </p>
-                  </div>
-                </div>
-                <Button variant="ghost" size="icon" className="w-8 h-8">
-                    <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="px-4 pb-3">
-              <p className="text-sm mb-3">{issue.description}</p>
-              {issue.image && (
-                <div className="rounded-lg overflow-hidden border">
-                  <Image
-                    src={issue.image}
-                    alt={`Issue reported by ${issue.user.name}`}
-                    width={600}
-                    height={400}
-                    className="w-full h-auto object-cover"
-                    data-ai-hint={issue.imageHint}
-                  />
-                </div>
-              )}
-            </CardContent>
-            <CardFooter className="p-4 pt-0 flex flex-col items-start gap-3">
-              <div className="flex gap-2">
-                {issue.tags.map(tag => <Badge key={tag} variant="secondary" className="capitalize">{tag}</Badge>)}
-                {issue.specialBadge && <Badge variant="default" className="bg-accent text-accent-foreground">{issue.specialBadge}</Badge>}
-              </div>
-              <div className="w-full flex items-center justify-between text-muted-foreground">
-                <Button variant="ghost" size="sm" className="flex items-center gap-1.5 -ml-2">
-                    <ThumbsUp className="w-4 h-4" /> <span>{issue.upvotes}</span>
-                </Button>
-                <Button variant="ghost" size="sm" className="flex items-center gap-1.5">
-                    <MessageCircle className="w-4 h-4" /> <span>{issue.comments}</span>
-                </Button>
-                <Button variant="ghost" size="sm" className="flex items-center gap-1.5">
-                    <Share2 className="w-4 h-4" /> <span>Share</span>
-                </Button>
-                <Button variant="ghost" size="sm" className="flex items-center gap-1.5">
-                    <Tag className="w-4 h-4" /> <span>Tag</span>
-                </Button>
-              </div>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // Map Panel Component
 const issuesOnMap = [
     { id: 'pothole1', emoji: '🕳️', top: '25%', left: '30%', tooltip: 'Pothole on Oak St' },
@@ -348,67 +186,6 @@ function MapPanel() {
   );
 }
 
-// Stats Panel Component
-const trendingTags = ["pothole", "streetlight", "parks", "noise", "safety"];
-
-function StatsPanel() {
-  return (
-    <div className="sticky top-20 space-y-6">
-      <Card className="bg-card/60 backdrop-blur-sm border-border/50">
-        <CardHeader>
-          <CardTitle className="font-headline text-lg flex items-center gap-2"><FileText className="w-5 h-5 text-primary" />Community Stats</CardTitle>
-          <CardDescription className="text-xs">
-            Overview of all reports on LocalEcho.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4 text-center">
-            <div>
-                <p className="text-3xl font-bold font-headline text-primary">1,492</p>
-                <p className="text-xs text-muted-foreground">Total Reports</p>
-            </div>
-            <div>
-                <p className="text-3xl font-bold font-headline text-green-500">834</p>
-                <p className="text-xs text-muted-foreground">Resolved</p>
-            </div>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-card/60 backdrop-blur-sm border-border/50">
-        <CardHeader>
-            <CardTitle className="font-headline text-lg flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" />Trending Tags</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {trendingTags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="capitalize cursor-pointer hover:bg-primary/20 transition-colors">{tag}</Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card className="bg-card/60 backdrop-blur-sm border-border/50">
-        <CardHeader>
-            <CardTitle className="font-headline text-lg">Your Activity</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div className="flex justify-between items-center text-sm">
-                <span className="text-muted-foreground flex items-center gap-2"><FileText className="w-4 h-4"/> Your Reports</span>
-                <span className="font-bold text-base">12</span>
-            </div>
-            <div className="flex justify-between items-center text-sm">
-                <span className="text-muted-foreground flex items-center gap-2"><ThumbsUp className="w-4 h-4"/> Upvotes Given</span>
-                <span className="font-bold text-base">152</span>
-            </div>
-            <div className="flex justify-between items-center text-sm">
-                <span className="text-muted-foreground flex items-center gap-2"><MessageCircle className="w-4 h-4"/> Comments Made</span>
-                <span className="font-bold text-base">34</span>
-            </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
 // Mobile Nav Component
 type MobileNavProps = {
   activeTab: string;
@@ -447,6 +224,72 @@ function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
         ))}
       </div>
     </div>
+  );
+}
+
+// Recent Issues List Component
+const recentIssues = [
+  { id: 1, user: { name: "Jane Cooper", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" }, title: "Pothole on Oak St", location: "Oak & Maple St", time: "5m ago" },
+  { id: 2, user: { name: "Robert Fox", avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d" }, title: "Overflowing bins at Park", location: "Central Park", time: "1h ago" },
+  { id: 3, user: { name: "Emily Selman", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704e" }, title: "Streetlight out on 5th Ave", location: "5th Avenue", time: "2h ago" },
+  { id: 4, user: { name: "John Doe", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704f" }, title: "Deep pothole near City Hall", location: "City Hall", time: "4h ago" },
+  { id: 5, user: { name: "Sarah Smith", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704a" }, title: "Illegal dumping on Elm St", location: "Elm St", time: "5h ago" },
+];
+
+function RecentIssuesList() {
+  return (
+    <Card className="sticky top-20 bg-card/60 backdrop-blur-sm border-border/50 max-h-[calc(100vh-28rem)] overflow-y-auto">
+      <CardHeader className="sticky top-0 bg-card/80 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-2">
+            <List className="w-5 h-5 text-primary" />
+            <CardTitle className="font-headline text-lg">Recent Issues</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {recentIssues.map((issue) => (
+            <div key={issue.id} className="flex items-center gap-4 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={issue.user.avatar} alt={issue.user.name} />
+                <AvatarFallback>{issue.user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div className="grid gap-1">
+                <p className="text-sm font-medium leading-none">{issue.title}</p>
+                <p className="text-sm text-muted-foreground">{issue.location} &middot; {issue.time}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// Quick Report Card
+type QuickReportCardProps = {
+    onReportClick: () => void;
+}
+
+function QuickReportCard({ onReportClick }: QuickReportCardProps) {
+  return (
+    <Card className="bg-card/60 backdrop-blur-sm border-border/50">
+      <CardHeader>
+        <div className="flex items-center gap-2">
+            <PlusCircle className="w-5 h-5 text-primary" />
+            <CardTitle className="font-headline text-lg">Quick Report</CardTitle>
+        </div>
+        <CardDescription className="text-xs">Spotted an issue? Report it now.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p className="text-sm text-muted-foreground mb-4">
+            Help improve your community by quickly reporting issues like potholes, graffiti, or broken streetlights.
+        </p>
+        <Button className="w-full" onClick={onReportClick}>
+            <Send className="w-4 h-4 mr-2" />
+            Report a New Issue
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -528,61 +371,42 @@ function CreateIssueDialog(props: DialogProps) {
 }
 
 
-// --- MAIN PAGE COMPONENT ---
+// --- MAIN MAP PAGE ---
 
-export default function FeedPage() {
-  const [isCreateIssueOpen, setCreateIssueOpen] = useState(false);
-  const [activeMobileTab, setActiveMobileTab] = useState<'feed' | 'map' | 'profile'>('feed');
-  const router = useRouter();
+export default function MapPage() {
+    const [activeMobileTab, setActiveMobileTab] = useState<'feed' | 'map' | 'profile'>('map');
+    const [isCreateIssueOpen, setCreateIssueOpen] = useState(false);
+    const router = useRouter();
+    
+    const handleTabChange = (tab: 'feed' | 'map' | 'profile') => {
+        setActiveMobileTab(tab);
+        if (tab === 'map') {
+            router.push('/feed/map');
+        } else if (tab === 'profile') {
+            router.push('/feed/reports');
+        } else {
+            router.push('/feed');
+        }
+    };
 
-  const handleTabChange = (tab: 'feed' | 'map' | 'profile') => {
-    setActiveMobileTab(tab);
-    if (tab === 'map') {
-      router.push('/feed/map');
-    } else if (tab === 'profile') {
-      router.push('/feed/reports');
-    } else {
-      router.push('/feed');
-    }
-  };
 
-  return (
-    <div className="flex min-h-screen w-full flex-col bg-background">
-      <AppHeader />
-      <main className="flex-1 container mx-auto px-4 py-6">
-        {/* Desktop Layout */}
-        <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-3">
-            <StatsPanel />
-          </div>
-          <div className="lg:col-span-6">
-            <IssueFeed />
-          </div>
-          <div className="lg:col-span-3">
-            <MapPanel />
-          </div>
+    return (
+        <div className="flex min-h-screen w-full flex-col bg-background">
+            <AppHeader />
+            <main className="flex-1 container mx-auto px-4 py-6">
+                <div className="lg:grid lg:grid-cols-12 gap-8 items-start">
+                    <div className="lg:col-span-8">
+                        <MapPanel />
+                    </div>
+                    <div className="lg:col-span-4 space-y-6">
+                        <RecentIssuesList />
+                        <QuickReportCard onReportClick={() => setCreateIssueOpen(true)} />
+                    </div>
+                </div>
+            </main>
+            <MobileNav activeTab={activeMobileTab} onTabChange={handleTabChange} />
+            <CreateIssueDialog open={isCreateIssueOpen} onOpenChange={setCreateIssueOpen} />
         </div>
-        
-        {/* Mobile Layout */}
-        <div className="lg:hidden">
-            {activeMobileTab === 'feed' && <IssueFeed />}
-        </div>
-      </main>
-
-      <CreateIssueDialog open={isCreateIssueOpen} onOpenChange={setCreateIssueOpen} />
-
-      {/* Floating Create Issue Button */}
-      <Button
-        size="icon"
-        className="rounded-full w-16 h-16 fixed bottom-20 right-4 lg:bottom-8 lg:right-8 shadow-2xl z-40 transition-transform hover:scale-110 active:scale-100"
-        onClick={() => setCreateIssueOpen(true)}
-        aria-label="Create new issue"
-      >
-        <Plus className="w-8 h-8" />
-      </Button>
-
-      {/* Mobile Navigation */}
-      <MobileNav activeTab={activeMobileTab} onTabChange={handleTabChange} />
-    </div>
-  );
+    );
 }
+
