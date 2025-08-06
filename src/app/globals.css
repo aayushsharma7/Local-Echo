@@ -96,6 +96,7 @@
   
   /* Inter Font Variable */
   --font-inter: "Inter", sans-serif;
+  
 }
 
 .dark {
@@ -113,7 +114,7 @@
   --secondary-foreground: #e0e0e0;
   --muted: #1e2837;
   --muted-foreground: #8a96a9;
-  --accent: #2c6e5a;
+  --accent: #3d99f5;
   --accent-foreground: #b8eed9;
   --destructive: #a82e2e;
   --destructive-foreground: #f4f6f8;
@@ -208,4 +209,5 @@
     border: 1px solid hsl(var(--border));
     box-shadow: var(--shadow-soft);
   }
+  
 }

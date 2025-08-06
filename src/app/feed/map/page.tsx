@@ -63,16 +63,23 @@ function AppHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
-        <div className="flex-1 flex items-center justify-start">
-          <Link href="/feed" className="flex items-center space-x-2">
-            <LocalEchoLogo className="h-7 w-7 text-primary text-glow" />
-            <span className="font-bold font-headline text-2xl inline-block tracking-tighter">
-              LocalEcho
-            </span>
-          </Link>
-        </div>
+        <div className="flex items-center space-x-2 md:ml-8 ml-1">
+              <Image
+                src="/logo4.png" // path to your transparent PNG in /public
+                alt="LocalEcho Logo"
+                width={62} // increase size as needed
+                height={62}
+                className="object-contain md:-mr-2"
+              />
+              <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
+                <Link href="#front-page">Local </Link>
+                <span className="text-gradient">
+                  <Link href="#front-page">Echo</Link>
+                </span>
+              </span>
+            </div>
 
-        <nav className="hidden md:flex flex-1 items-center justify-center space-x-1">
+        <nav className="hidden md:flex flex-1 items-center justify-center space-x-1 ml-75">
           {navLinks.map((link) => (
             <Button asChild variant="ghost" key={link.label} className="text-muted-foreground hover:text-foreground">
               <Link
@@ -94,7 +101,7 @@ function AppHeader() {
             <ThemeToggle />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full md:mr-10 mr-4">
                         <Avatar className="h-10 w-10 border-2 border-transparent hover:border-primary transition-colors">
                         <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
                         <AvatarFallback>U</AvatarFallback>
@@ -134,7 +141,7 @@ const issuesOnMap = [
 
 function MapPanel() {
   return (
-    <Card className="sticky top-20 bg-card/60 backdrop-blur-sm border-border/50 h-[calc(100vh-15rem)] lg:h-[calc(100vh-9rem)]">
+    <Card className="md:ml-10 sticky top-20 bg-card/60 backdrop-blur-sm border-border/50 h-[calc(100vh-15rem)] lg:h-[calc(100vh-9rem)]">
       <CardHeader>
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -150,38 +157,49 @@ function MapPanel() {
         <CardDescription className="text-xs">Live issues reported by the community. Click an icon for details.</CardDescription>
       </CardHeader>
       <CardContent className="h-[calc(100%-8rem)] lg:h-[calc(100%-6rem)] p-0">
-        <TooltipProvider>
-            <div className="relative w-full h-full bg-secondary/30 rounded-b-lg overflow-hidden">
-                <div 
-                    className="absolute inset-0 z-0" 
-                    style={{
-                    backgroundImage: 'linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)',
-                    backgroundSize: '30px 30px',
-                    }}
-                />
-                {issuesOnMap.map((issue, index) => (
-                    <Tooltip key={issue.id}>
-                        <TooltipTrigger asChild>
-                            <div
-                                className="absolute text-3xl transition-transform hover:scale-125 z-10 cursor-pointer"
-                                style={{ 
-                                    top: issue.top, 
-                                    left: issue.left,
-                                    animation: `bounce 1.5s ease-in-out infinite`,
-                                    animationDelay: `${index * 0.15}s`,
-                                }}
-                            >
-                                {issue.emoji}
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>{issue.tooltip}</p>
-                        </TooltipContent>
-                    </Tooltip>
-                ))}
+  <TooltipProvider>
+    <div
+      className="relative w-full h-full rounded-b-lg overflow-hidden"
+      style={{
+        backgroundImage: 'url("/map-preview.png")', // Using the map image URL
+        backgroundSize: 'cover', // Ensures the image covers the entire area
+        backgroundPosition: 'center', // Centers the image
+      }}
+    >
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: 'linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)',
+          backgroundSize: '30px 30px',
+        }}
+      />
+      {issuesOnMap.map((issue, index) => (
+        <Tooltip key={issue.id}>
+          <TooltipTrigger asChild>
+            <div
+              className="absolute text-xl transition-transform hover:scale-125 z-10 cursor-pointer flex items-center justify-center rounded-full"
+              style={{
+                top: issue.top,
+                left: issue.left,
+                animation: `bounce 1.5s ease-in-out infinite`,
+                animationDelay: `${index * 0.15}s`,
+                width: '42px', // Ensure a fixed size for the circle
+                height: '42px', // Ensure a fixed size for the circle
+                backgroundColor: '#3d99f5', // Use your primary color variable
+                transform: `translate(-50%, -50%)`, // Center the entire pin container
+              }}
+            >
+              {issue.emoji}
             </div>
-        </TooltipProvider>
-      </CardContent>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{issue.tooltip}</p>
+          </TooltipContent>
+        </Tooltip>
+      ))}
+    </div>
+  </TooltipProvider>
+</CardContent>
     </Card>
   );
 }
@@ -238,30 +256,30 @@ const recentIssues = [
 
 function RecentIssuesList() {
   return (
-    <Card className="sticky top-20 bg-card/60 backdrop-blur-sm border-border/50 max-h-[calc(100vh-28rem)] overflow-y-auto">
-      <CardHeader className="sticky top-0 bg-card/80 backdrop-blur-sm z-10">
-        <div className="flex items-center gap-2">
-            <List className="w-5 h-5 text-primary" />
-            <CardTitle className="font-headline text-lg">Recent Issues</CardTitle>
+    <Card className="md:mr-10 sticky top-20 bg-card border-border/50 max-h-[calc(100vh-28rem)] overflow-hidden">
+  <CardHeader className="bg-card z-10">
+    <div className="flex items-center gap-2">
+      <List className="w-5 h-5 text-primary" />
+      <CardTitle className="font-headline text-lg">Recent Issues</CardTitle>
+    </div>
+  </CardHeader>
+  <CardContent className="h-[calc(100%-8rem)] -mt-5 p-4 overflow-y-auto">
+    <div className="space-y-4">
+      {recentIssues.map((issue) => (
+        <div key={issue.id} className="flex items-center gap-4 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={issue.user.avatar} alt={issue.user.name} />
+            <AvatarFallback>{issue.user.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="grid gap-1">
+            <p className="text-sm font-medium leading-none">{issue.title}</p>
+            <p className="text-sm text-muted-foreground">{issue.location} &middot; {issue.time}</p>
+          </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {recentIssues.map((issue) => (
-            <div key={issue.id} className="flex items-center gap-4 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src={issue.user.avatar} alt={issue.user.name} />
-                <AvatarFallback>{issue.user.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <p className="text-sm font-medium leading-none">{issue.title}</p>
-                <p className="text-sm text-muted-foreground">{issue.location} &middot; {issue.time}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+      ))}
+    </div>
+  </CardContent>
+</Card>
   );
 }
 
@@ -272,7 +290,7 @@ type QuickReportCardProps = {
 
 function QuickReportCard({ onReportClick }: QuickReportCardProps) {
   return (
-    <Card className="bg-card/60 backdrop-blur-sm border-border/50">
+    <Card className="md:mr-10 bg-card/60 backdrop-blur-sm border-border/50">
       <CardHeader>
         <div className="flex items-center gap-2">
             <PlusCircle className="w-5 h-5 text-primary" />
@@ -393,12 +411,12 @@ export default function MapPage() {
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <AppHeader />
-            <main className="flex-1 container mx-auto px-4 py-6">
+            <main className="flex-1 container mx-auto px-4 py-6 lg:pb-6 pb-24">
                 <div className="lg:grid lg:grid-cols-12 gap-8 items-start">
                     <div className="lg:col-span-8">
                         <MapPanel />
                     </div>
-                    <div className="lg:col-span-4 space-y-6">
+                    <div className="lg:col-span-4 space-y-6 mt-6 md:mt-0">
                         <RecentIssuesList />
                         <QuickReportCard onReportClick={() => setCreateIssueOpen(true)} />
                     </div>

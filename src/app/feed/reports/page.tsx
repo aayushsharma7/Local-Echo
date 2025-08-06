@@ -43,16 +43,23 @@ function AppHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
-        <div className="flex-1 flex items-center justify-start">
-          <Link href="/feed" className="flex items-center space-x-2">
-            <LocalEchoLogo className="h-7 w-7 text-primary text-glow" />
-            <span className="font-bold font-headline text-2xl inline-block tracking-tighter">
-              LocalEcho
-            </span>
-          </Link>
-        </div>
+        <div className="flex items-center space-x-2 md:ml-8 ml-1">
+              <Image
+                src="/logo4.png" // path to your transparent PNG in /public
+                alt="LocalEcho Logo"
+                width={62} // increase size as needed
+                height={62}
+                className="object-contain md:-mr-2"
+              />
+              <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
+                <Link href="#front-page">Local </Link>
+                <span className="text-gradient">
+                  <Link href="#front-page">Echo</Link>
+                </span>
+              </span>
+            </div>
 
-        <nav className="hidden md:flex flex-1 items-center justify-center space-x-1">
+        <nav className="hidden md:flex flex-1 items-center justify-center space-x-1 ml-75">
           {navLinks.map((link) => (
             <Button asChild variant="ghost" key={link.label} className="text-muted-foreground hover:text-foreground">
               <Link
@@ -74,7 +81,7 @@ function AppHeader() {
             <ThemeToggle />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full md:mr-10 mr-4">
                         <Avatar className="h-10 w-10 border-2 border-transparent hover:border-primary transition-colors">
                         <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
                         <AvatarFallback>U</AvatarFallback>
@@ -109,7 +116,7 @@ const userIssues = [
     id: 1,
     title: "Large pothole on Main St",
     description: "Huge pothole at the intersection of Oak & Maple. Needs immediate attention.",
-    image: "/placeho.png",
+    image: "/map-preview.png",
     imageHint: "pothole road",
     tags: ["pothole", "danger"],
     status: "In Progress",
@@ -135,7 +142,7 @@ const userIssues = [
     id: 3,
     title: "Overflowing Park Bins",
     description: "Trash cans at Central Park near playground are full.",
-    image: "/placeho.png",
+    image: "/map-preview.png",
     imageHint: "trash park",
     tags: ["trash", "park"],
     status: "Submitted",
@@ -152,7 +159,7 @@ function MyReports() {
       {userIssues.map((issue) => (
         <Card key={issue.id} className="bg-card/60 backdrop-blur-sm border-border/50 overflow-hidden">
           <div className="grid grid-cols-1">
-              <div className="p-4">
+              <div className="p-4 -mt-5">
                   <div className="flex items-start justify-between">
                       <div>
                           <div className="flex items-center gap-2 mb-1">
@@ -182,7 +189,7 @@ function MyReports() {
                   <div className="flex flex-wrap gap-2 mb-3">
                       {issue.tags.map(tag => <Badge key={tag} variant="secondary" className="capitalize">{tag}</Badge>)}
                   </div>
-                  <div className="flex items-center justify-between text-muted-foreground">
+                  <div className="flex items-center justify-between text-muted-foreground -mb-6">
                       <div className="flex items-center gap-4">
                           <div className="flex items-center gap-1.5 text-sm">
                               <ThumbsUp className="w-4 h-4" /> <span>{issue.upvotes}</span>
@@ -196,7 +203,7 @@ function MyReports() {
                               <Edit className="w-3 h-3" /> <span>Edit</span>
                           </Button>
                           <Button variant="destructive" size="sm" className="flex items-center gap-1.5">
-                              <Trash2 className="w-3 h-3" /> <span>Delete</span>
+                              <Trash2 className="w-3 h-3 " /> <span>Delete</span>
                           </Button>
                       </div>
                   </div>
@@ -252,7 +259,7 @@ function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
 // My Reports Stats Component
 function MyReportsStats() {
     return (
-        <Card className="bg-card/60 backdrop-blur-sm border-border/50">
+        <Card className="md:ml-10 bg-card/60 backdrop-blur-sm border-border/50">
             <CardHeader>
                 <div className="flex items-center gap-3">
                     <FileText className="w-6 h-6 text-primary" />
@@ -287,7 +294,7 @@ const trendingTagsData = ["pothole", "streetlight", "parks", "noise", "safety"];
 
 function StatsPanel() {
   return (
-    <div className="sticky top-20 space-y-6">
+    <div className=" md:mr-10 sticky top-20 space-y-6">
       <Card className="bg-card/60 backdrop-blur-sm border-border/50">
         <CardHeader>
           <CardTitle className="font-headline text-lg flex items-center gap-2"><FileText className="w-5 h-5 text-primary" />Community Stats</CardTitle>
@@ -326,8 +333,8 @@ function StatsPanel() {
 // User Profile Card Component
 function UserProfileCard() {
   return (
-    <Card className="bg-card/60 backdrop-blur-sm border-border/50">
-      <CardContent className="pt-6 flex flex-col items-center text-center">
+    <Card className="md:ml-10 bg-card/60 backdrop-blur-sm border-border/50">
+      <CardContent className="flex flex-col items-center text-center">
         <Avatar className="w-24 h-24 mb-4 border-4 border-primary/50">
           <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="John Doe" />
           <AvatarFallback>JD</AvatarFallback>
@@ -379,7 +386,7 @@ export default function ReportsPage() {
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <AppHeader />
-            <main className="flex-1 container mx-auto px-4 py-6">
+            <main className="flex-1 container mx-auto px-4 py-6 lg:pb-6 pb-24">
                 {/* Desktop Layout */}
                 <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-start">
                     <div className="lg:col-span-3 space-y-6">
@@ -398,11 +405,13 @@ export default function ReportsPage() {
                 <div className="lg:hidden">
                     <MyReportsStats />
                     <div className='my-4' />
-                    <MyReports />
-                    <div className='my-4' />
                     <UserProfileCard />
+                    
                     <div className='my-4' />
-                    <TrendingTagsPanel />
+                    <MyReports />
+                    
+                    {/* <div className='my-4' />
+                    <TrendingTagsPanel /> */}
                 </div>
             </main>
             <MobileNav activeTab={activeMobileTab} onTabChange={handleTabChange} />

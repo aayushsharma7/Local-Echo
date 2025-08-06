@@ -86,16 +86,23 @@ function AppHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
-        <div className="flex-1 flex items-center justify-start">
-          <Link href="/feed" className="flex items-center space-x-2">
-            <LocalEchoLogo className="h-7 w-7 text-primary text-glow" />
-            <span className="font-bold font-headline text-2xl inline-block tracking-tighter">
-              LocalEcho
-            </span>
-          </Link>
-        </div>
+        <div className="flex items-center space-x-2 md:ml-8 ml-1">
+              <Image
+                src="/logo4.png" // path to your transparent PNG in /public
+                alt="LocalEcho Logo"
+                width={62} // increase size as needed
+                height={62}
+                className="object-contain md:-mr-2"
+              />
+              <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
+                <Link href="#front-page">Local </Link>
+                <span className="text-gradient">
+                  <Link href="#front-page">Echo</Link>
+                </span>
+              </span>
+            </div>
 
-        <nav className="hidden md:flex flex-1 items-center justify-center space-x-1">
+        <nav className="hidden md:flex flex-1 items-center justify-center space-x-1 ml-75">
           {navLinks.map((link) => (
             <Button asChild variant="ghost" key={link.label} className="text-muted-foreground hover:text-foreground">
               <Link
@@ -117,7 +124,7 @@ function AppHeader() {
             <ThemeToggle />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full md:mr-10 mr-4">
                         <Avatar className="h-10 w-10 border-2 border-transparent hover:border-primary transition-colors">
                         <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
                         <AvatarFallback>U</AvatarFallback>
@@ -152,7 +159,7 @@ const issues = [
     id: 1,
     user: { name: "Jane Cooper", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" },
     description: "Huge pothole at the intersection of Oak & Maple. Multiple cars have been hit. Needs immediate attention from the city.",
-    image: "/placeho.png",
+    image: '/map-preview.png',
     imageHint: "pothole road",
     tags: ["pothole", "danger"],
     location: "Oak & Maple St",
@@ -178,7 +185,7 @@ const issues = [
     id: 3,
     user: { name: "City Works", avatar: "https://i.pravatar.cc/150?u=cityworks" },
     description: "Streetlight outage reported on 5th Avenue between Pine and Elm has been resolved. Our team replaced the faulty bulb this morning.",
-    image: "/placeho.png",
+    image: '/map-preview.png',
     imageHint: "street light",
     tags: ["streetlight", "resolved"],
     location: "5th Avenue",
@@ -192,10 +199,19 @@ const issues = [
 function FeedFilters() {
   return (
     <Card className="mb-4 bg-card/60 backdrop-blur-sm border-border/50">
-        <CardContent className="p-3 flex items-center justify-between gap-2">
+        <CardContent className=" flex items-center justify-between gap-2 -mt-3 -mb-3">
             <div className="flex items-center gap-2">
                 <Rss className="w-5 h-5 text-primary" />
-                <h2 className="text-lg font-headline font-semibold">Community Feed</h2>
+                <h2 className="text-lg font-headline font-semibold text-center">
+                  <div className='flex gap-1'>
+                  <span className='hidden md:block'>
+                  Community 
+                  </span>
+                  <span className=''>
+                  Feed 
+                  </span>
+                  </div>
+                  </h2>
             </div>
             <div className="flex items-center gap-2">
                 <Select defaultValue="recent">
@@ -224,7 +240,7 @@ function IssueFeed() {
       <div className="space-y-4">
         {issues.map((issue) => (
           <Card key={issue.id} className="bg-card/60 backdrop-blur-sm border-border/50 overflow-hidden">
-            <CardHeader className="p-4">
+            <CardHeader className="p-4 -mt-5">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <Avatar>
@@ -243,7 +259,7 @@ function IssueFeed() {
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="px-4 pb-3">
+            <CardContent className="px-4 pb-3 -mt-7">
               <p className="text-sm mb-3">{issue.description}</p>
               {issue.image && (
                 <div className="rounded-lg overflow-hidden border">
@@ -259,11 +275,11 @@ function IssueFeed() {
               )}
             </CardContent>
             <CardFooter className="p-4 pt-0 flex flex-col items-start gap-3">
-              <div className="flex gap-2">
+              <div className="flex gap-2 -mt-5">
                 {issue.tags.map(tag => <Badge key={tag} variant="secondary" className="capitalize">{tag}</Badge>)}
                 {issue.specialBadge && <Badge variant="default" className="bg-accent text-accent-foreground">{issue.specialBadge}</Badge>}
               </div>
-              <div className="w-full flex items-center justify-between text-muted-foreground">
+              <div className="w-full flex items-center justify-between text-muted-foreground -mb-5">
                 <Button variant="ghost" size="sm" className="flex items-center gap-1.5 -ml-2">
                     <ThumbsUp className="w-4 h-4" /> <span>{issue.upvotes}</span>
                 </Button>
@@ -296,11 +312,11 @@ const issuesOnMap = [
 
 function MapPanel() {
   return (
-    <Card className="sticky top-20 bg-card/60 backdrop-blur-sm border-border/50 h-[calc(100vh-15rem)] lg:h-[calc(100vh-9rem)]">
+    <Card className="mr-10 sticky top-20 bg-card/60 backdrop-blur-sm border-border/50 h-[calc(100vh-15rem)] lg:h-[calc(100vh-9rem)]">
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between -ml-1">
             <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-primary" />
+                <MapPin className="w-5 h-5 text-primary " />
                 <CardTitle className="font-headline text-lg">Issue Map</CardTitle>
             </div>
             <div className="flex items-center gap-1">
@@ -311,39 +327,46 @@ function MapPanel() {
         </div>
         <CardDescription className="text-xs">Live issues reported by the community. Click an icon for details.</CardDescription>
       </CardHeader>
-      <CardContent className="h-[calc(100%-8rem)] lg:h-[calc(100%-6rem)] p-0">
-        <TooltipProvider>
-            <div className="relative w-full h-full bg-secondary/30 rounded-b-lg overflow-hidden">
-                <div 
-                    className="absolute inset-0 z-0" 
-                    style={{
-                    backgroundImage: 'linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)',
-                    backgroundSize: '30px 30px',
-                    }}
-                />
-                {issuesOnMap.map((issue, index) => (
-                    <Tooltip key={issue.id}>
-                        <TooltipTrigger asChild>
-                            <div
-                                className="absolute text-3xl transition-transform hover:scale-125 z-10 cursor-pointer"
-                                style={{ 
-                                    top: issue.top, 
-                                    left: issue.left,
-                                    animation: `bounce 1.5s ease-in-out infinite`,
-                                    animationDelay: `${index * 0.15}s`,
-                                }}
-                            >
-                                {issue.emoji}
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>{issue.tooltip}</p>
-                        </TooltipContent>
-                    </Tooltip>
-                ))}
+      <CardContent className="h-[calc(100%-8rem)] lg:h-[calc(100%-6rem)] p-0 ">
+  <TooltipProvider>
+    <div 
+      className="relative w-full h-full rounded-b-lg overflow-hidden" 
+      style={{
+        backgroundImage: "url('/map-preview.png')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <div 
+        className="absolute inset-0 z-0" 
+        style={{
+          backgroundImage: 'linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)',
+          backgroundSize: '30px 30px',
+        }}
+      />
+      {issuesOnMap.map((issue, index) => (
+        <Tooltip key={issue.id}>
+          <TooltipTrigger asChild>
+            <div
+              className="absolute text-3xl transition-transform hover:scale-125 z-10 cursor-pointer"
+              style={{ 
+                top: issue.top, 
+                left: issue.left,
+                animation: `bounce 1.5s ease-in-out infinite`,
+                animationDelay: `${index * 0.15}s`,
+              }}
+            >
+              {issue.emoji}
             </div>
-        </TooltipProvider>
-      </CardContent>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{issue.tooltip}</p>
+          </TooltipContent>
+        </Tooltip>
+      ))}
+    </div>
+  </TooltipProvider>
+</CardContent>
     </Card>
   );
 }
@@ -353,7 +376,7 @@ const trendingTags = ["pothole", "streetlight", "parks", "noise", "safety"];
 
 function StatsPanel() {
   return (
-    <div className="sticky top-20 space-y-6">
+    <div className="ml-10 sticky top-20 space-y-6">
       <Card className="bg-card/60 backdrop-blur-sm border-border/50">
         <CardHeader>
           <CardTitle className="font-headline text-lg flex items-center gap-2"><FileText className="w-5 h-5 text-primary" />Community Stats</CardTitle>
@@ -547,9 +570,9 @@ export default function FeedPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-background">
+    <div className="flex min-h-screen w-full flex-col bg-background1">
       <AppHeader />
-      <main className="flex-1 container mx-auto px-4 py-6">
+      <main className="flex-1 container mx-auto px-4 py-6 lg:pb-6 pb-24">
         {/* Desktop Layout */}
         <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-3">
