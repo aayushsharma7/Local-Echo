@@ -76,7 +76,7 @@ const Hero = () => {
               </div>
 
               {/* Main Headlines */}
-              <div className="space-y-4 md:-mt-4">
+              <div className="space-y-4 md:-mt-4 -mt-3">
                 <h1 className="text-4xl md:text-7xl font-bold md:leading-20 text-center md:text-left">
                   Community Hub, <br></br>
                   <span className="text-gradient">

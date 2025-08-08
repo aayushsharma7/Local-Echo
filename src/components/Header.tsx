@@ -10,9 +10,9 @@ import { Github, Twitter, Mail, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { dark } from '@clerk/themes';
+import { dark } from "@clerk/themes";
 
-import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs'
+import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs";
 import {
   Camera,
   Eye,
@@ -46,14 +46,14 @@ const Header = () => {
   // useEffect(() => { ... }, [darkMode]);
 
   const toggleDarkMode = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark'); // <-- Use setTheme to toggle
+    setTheme(theme === "dark" ? "light" : "dark"); // <-- Use setTheme to toggle
   };
 
   const [mounted, setMounted] = useState(false);
 
-useEffect(() => {
-  setMounted(true);
-}, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div>
@@ -70,15 +70,15 @@ useEffect(() => {
                 className="object-contain md:-mr-2"
               />
               <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
-                <Link href="#front-page">Local </Link>
+                <Link href="/">Local </Link>
                 <span className="text-gradient">
-                  <Link href="#front-page">Echo</Link>
+                  <Link href="/">Echo</Link>
                 </span>
               </span>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8 ml-23">
+            <nav className="hidden md:flex items-center space-x-8 ml-36">
               {navItems.map((item) => (
                 <a
                   key={item.label}
@@ -91,17 +91,17 @@ useEffect(() => {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center md:space-x-4 ">
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleDarkMode}
-                className="w-9 h-9 p-0  "
+                className="w-9 h-9 p-0 -mr-35 translate-x-12 md:-mr-0 md:translate-x-0 "
               >
-                {mounted && theme === 'dark' ? (
+                {mounted && theme === "dark" ? (
                   <Sun className="w-4 h-4" />
-                ) : mounted && theme === 'light' ? (
+                ) : mounted && theme === "light" ? (
                   <Moon className="w-4 h-4" />
                 ) : null}
               </Button>
@@ -115,12 +115,13 @@ useEffect(() => {
                       size="sm"
                       className="hero-bg text-primary-foreground"
                     >
-                      <Link href="#get-started">Go to Feed</Link>
+                      <Link href="/feed">Go to Feed</Link>
                     </Button>
-                    <UserButton appearance={{
-                                        baseTheme: theme === 'dark' ? dark : undefined,
-                                    }} />
-                    
+                    <UserButton
+                      appearance={{
+                        baseTheme: theme === "dark" ? dark : undefined,
+                      }}
+                    />
                   </div>
                 </>
               ) : (
@@ -134,7 +135,7 @@ useEffect(() => {
                       <Link href="#get-started">Get Started</Link>
                     </Button>
                     <SignInButton>
-                      <Button variant="ghost" size="sm">
+                      <Button variant="ghost" size="sm" >
                         Sign In
                       </Button>
                     </SignInButton>
@@ -143,7 +144,6 @@ useEffect(() => {
                         Sign Up
                       </Button>
                     </SignUpButton>
-                    
                   </div>
                 </>
               )}
@@ -186,49 +186,58 @@ useEffect(() => {
                   </a>
                 ))}
                 {/* Mobile Auth Buttons */}
-                                {isSignedIn ? (
-                                    <>
-                                        <div className="flex flex-col space-y-2 pt-4 border-t border-border">
-                                            <Button
-                                                asChild
-                                                size="sm"
-                                                className="hero-bg text-primary-foreground"
-                                            >
-                                                <Link href="#get-started" onClick={() => setIsMenuOpen(false)}>Go to Feed</Link>
-                                            </Button>
-                                            <UserButton afterSignOutUrl='/' appearance={{
-                                                baseTheme: theme === 'dark' ? dark : undefined,
-                                            }} />
-                                        </div>
-                                    </>
-                                ) : (
-                                    <>
-                                        <div className="flex flex-col space-y-2 pt-4 border-t border-border">
-                                            <Button
-                                                asChild
-                                                size="sm"
-                                                className="hero-bg text-primary-foreground"
-                                            >
-                                                <Link
-                                                    href="#get-started"
-                                                    onClick={() => setIsMenuOpen(false)}
-                                                >
-                                                    Get Started
-                                                </Link>
-                                            </Button>
-                                            <SignInButton>
-                                                <Button variant="ghost" size="sm">
-                                                    Sign In
-                                                </Button>
-                                            </SignInButton>
-                                            <SignUpButton>
-                                                <Button variant="ghost" size="sm">
-                                                    Sign Up
-                                                </Button>
-                                            </SignUpButton>
-                                        </div>
-                                    </>
-                                )}
+                {isSignedIn ? (
+                  <>
+                    <div className="flex flex-col space-y-2 pt-4 border-t border-border">
+                      <Button
+                        asChild
+                        size="sm"
+                        className="hero-bg text-primary-foreground"
+                      >
+                        <Link
+                          href="#feed"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Go to Feed
+                        </Link>
+                      </Button>
+                      <UserButton
+                        afterSignOutUrl="/"
+                        appearance={{
+                          baseTheme: theme === "dark" ? dark : undefined,
+                        }}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex flex-col space-y-2 pt-4 border-t border-border">
+                      
+                      <SignInButton>
+                        <Button variant="ghost" size="sm">
+                          Sign In
+                        </Button>
+                      </SignInButton>
+                      <SignUpButton>
+                        <Button variant="ghost" size="sm">
+                          Sign Up
+                        </Button>
+                      </SignUpButton>
+                      <Button
+                        asChild
+                        size="sm"
+                        className="hero-bg text-primary-foreground"
+                      >
+                        <Link
+                          href="#get-started"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Get Started
+                        </Link>
+                      </Button>
+                    </div>
+                  </>
+                )}
               </nav>
             </div>
           )}

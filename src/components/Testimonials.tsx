@@ -7,6 +7,7 @@ import { Github, Twitter, Mail, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { Card } from "@/components/ui/card";
+
 import {
   Camera,
   Eye,
@@ -268,18 +269,22 @@ const Issues = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                   <Button
                     size="lg"
+                    
                     className="bg-gradient-to-r from-primary to-primary-glow text-white border-0 shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
                   >
-                    <MapPin className="w-5 h-5 mr-3" />
+                    <MapPin className="w-5 h-5 mr-0" />
+                    <Link href="/">
                     Start Reporting Now
-                    <ArrowRight className="w-5 h-5 ml-3" />
+                    </Link>
+                    
+                    <ArrowRight className="w-5 h-5 " />
                   </Button>
                   <Button
                     size="lg"
                     variant="outline"
                     className="border-2 border-border bg-background/50 backdrop-blur-sm hover:bg-background/80 hover:scale-105 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
                   >
-                    <Users className="w-5 h-5 mr-3" />
+                    <Users className="w-5 h-5 " />
                     Explore Community
                   </Button>
                 </div>
@@ -320,14 +325,14 @@ const Issues = () => {
               <div className="inline-flex items-center space-x-4 bg-gradient-to-r from-background/60 via-surface-soft/80 to-background/60 backdrop-blur-sm border border-border/30 px-8 py-4 rounded-full shadow-lg">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-gradient-to-r from-primary to-primary-glow rounded-full animate-pulse" />
-                  <span className="text-sm font-medium text-muted-foreground">
+                  <span className="text-sm font-medium text-muted-foreground text-center">
                     Works on all devices
                   </span>
                 </div>
                 <div className="w-px h-4 bg-border/50" />
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-gradient-to-r from-primary-glow to-primary rounded-full animate-pulse delay-500" />
-                  <span className="text-sm font-medium text-muted-foreground">
+                  <span className="text-sm font-medium text-muted-foreground text-center">
                     Mobile-first design
                   </span>
                 </div>
