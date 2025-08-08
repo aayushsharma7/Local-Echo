@@ -1,13 +1,18 @@
+// components/Header.tsx
+
 "use client";
 import React from "react";
 
 import { useState, useEffect } from "react";
-import { ArrowRight, Users, MapPin, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Users, MapPin, Sparkles, Star, User } from "lucide-react";
 import { Bell, Smartphone } from "lucide-react";
 import { Github, Twitter, Mail, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { dark } from '@clerk/themes';
+
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs'
 import {
   Camera,
   Eye,
@@ -21,7 +26,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
+import { useTheme } from "next-themes"; // <-- Import useTheme
+
 const Header = () => {
+  const { isSignedIn } = useUser();
+  const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navItems = [
     { label: "Guide", href: "#how-it-works" },
@@ -30,34 +40,21 @@ const Header = () => {
     { label: "Testimonials", href: "#testimonials" },
   ];
 
-  const [darkMode, setDarkMode] = useState(false);
-
-  // Initialize theme from localStorage or system preference
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    const systemPrefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
-    ).matches;
-
-    if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
-      setDarkMode(true);
-    }
-  }, []);
-
-  // Apply theme to document
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
+  // The state and effects below are no longer needed as useTheme handles it
+  // const [darkMode, setDarkMode] = useState(false);
+  // useEffect(() => { ... }, []);
+  // useEffect(() => { ... }, [darkMode]);
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+    setTheme(theme === 'dark' ? 'light' : 'dark'); // <-- Use setTheme to toggle
   };
+
+  const [mounted, setMounted] = useState(false);
+
+useEffect(() => {
+  setMounted(true);
+}, []);
+
   return (
     <div>
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
@@ -102,48 +99,76 @@ const Header = () => {
                 onClick={toggleDarkMode}
                 className="w-9 h-9 p-0"
               >
-                {darkMode ? (
+                {mounted && theme === 'dark' ? (
                   <Sun className="w-4 h-4" />
-                ) : (
+                ) : mounted && theme === 'light' ? (
                   <Moon className="w-4 h-4" />
-                )}
+                ) : null}
               </Button>
 
               {/* Auth Buttons */}
-              <div className="hidden sm:flex items-center space-x-2">
-                <Button variant="ghost" size="sm">
-                  Sign In
-                </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  className="hero-bg text-primary-foreground"
-                >
-                  <Link href="#get-started">Get Started</Link>
-                </Button>
-              </div>
-
-              {/* Mobile Menu Button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="md:hidden w-9 h-9 p-0"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <div className="w-4 h-4 flex flex-col justify-center items-center">
-                  <span
-                    className={`w-4 h-0.5 bg-current transition-all duration-200 ${
-                      isMenuOpen ? "rotate-45 translate-y-0.5" : ""
-                    }`}
-                  />
-                  <span
-                    className={`w-4 h-0.5 bg-current transition-all duration-200 mt-1 ${
-                      isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""
-                    }`}
-                  />
-                </div>
-              </Button>
+              {isSignedIn ? (
+                <>
+                  <div className="hidden sm:flex items-center space-x-2 md:space-x-5">
+                    <Button
+                      asChild
+                      size="sm"
+                      className="hero-bg text-primary-foreground"
+                    >
+                      <Link href="#get-started">Go to Feed</Link>
+                    </Button>
+                    <UserButton appearance={{
+                                        baseTheme: theme === 'dark' ? dark : undefined,
+                                    }} />
+                    
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="hidden sm:flex items-center space-x-2">
+                    <Button
+                      asChild
+                      size="sm"
+                      className="hero-bg text-primary-foreground"
+                    >
+                      <Link href="#get-started">Get Started</Link>
+                    </Button>
+                    <SignInButton>
+                      <Button variant="ghost" size="sm">
+                        Sign In
+                      </Button>
+                    </SignInButton>
+                    <SignUpButton>
+                      <Button variant="ghost" size="sm">
+                        Sign Up
+                      </Button>
+                    </SignUpButton>
+                    
+                  </div>
+                </>
+              )}
             </div>
+
+            {/* Mobile Menu Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              className="md:hidden w-9 h-9 p-0"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <div className="w-4 h-4 flex flex-col justify-center items-center">
+                <span
+                  className={`w-4 h-0.5 bg-current transition-all duration-200 ${
+                    isMenuOpen ? "rotate-45 translate-y-0.5" : ""
+                  }`}
+                />
+                <span
+                  className={`w-4 h-0.5 bg-current transition-all duration-200 mt-1 ${
+                    isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""
+                  }`}
+                />
+              </div>
+            </Button>
           </div>
 
           {/* Mobile Menu */}
