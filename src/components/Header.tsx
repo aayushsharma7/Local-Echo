@@ -97,7 +97,7 @@ useEffect(() => {
                 variant="ghost"
                 size="sm"
                 onClick={toggleDarkMode}
-                className="w-9 h-9 p-0"
+                className="w-9 h-9 p-0  "
               >
                 {mounted && theme === 'dark' ? (
                   <Sun className="w-4 h-4" />
@@ -185,24 +185,50 @@ useEffect(() => {
                     {item.label}
                   </a>
                 ))}
-                <div className="flex flex-col space-y-2 pt-4 border-t border-border">
-                  <Button variant="ghost" size="sm">
-                    Sign In
-                  </Button>
-
-                  <Button
-                    asChild
-                    size="sm"
-                    className="hero-bg text-primary-foreground"
-                  >
-                    <Link
-                      href="#get-started"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Get Started
-                    </Link>
-                  </Button>
-                </div>
+                {/* Mobile Auth Buttons */}
+                                {isSignedIn ? (
+                                    <>
+                                        <div className="flex flex-col space-y-2 pt-4 border-t border-border">
+                                            <Button
+                                                asChild
+                                                size="sm"
+                                                className="hero-bg text-primary-foreground"
+                                            >
+                                                <Link href="#get-started" onClick={() => setIsMenuOpen(false)}>Go to Feed</Link>
+                                            </Button>
+                                            <UserButton afterSignOutUrl='/' appearance={{
+                                                baseTheme: theme === 'dark' ? dark : undefined,
+                                            }} />
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className="flex flex-col space-y-2 pt-4 border-t border-border">
+                                            <Button
+                                                asChild
+                                                size="sm"
+                                                className="hero-bg text-primary-foreground"
+                                            >
+                                                <Link
+                                                    href="#get-started"
+                                                    onClick={() => setIsMenuOpen(false)}
+                                                >
+                                                    Get Started
+                                                </Link>
+                                            </Button>
+                                            <SignInButton>
+                                                <Button variant="ghost" size="sm">
+                                                    Sign In
+                                                </Button>
+                                            </SignInButton>
+                                            <SignUpButton>
+                                                <Button variant="ghost" size="sm">
+                                                    Sign Up
+                                                </Button>
+                                            </SignUpButton>
+                                        </div>
+                                    </>
+                                )}
               </nav>
             </div>
           )}
