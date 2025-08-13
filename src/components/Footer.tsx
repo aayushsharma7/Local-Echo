@@ -96,7 +96,7 @@ const Footer = () => {
                   className="object-contain md:-mr-2"
                 />
                 <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
-                  Local <span className="text-gradient">Echo</span>
+                  Local<span className="text-gradient">Echo</span>
                 </span>
               </div>
 

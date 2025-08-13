@@ -70,7 +70,7 @@ const Header = () => {
                 className="object-contain md:-mr-2"
               />
               <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
-                <Link href="/">Local </Link>
+                <Link href="/">Local</Link>
                 <span className="text-gradient">
                   <Link href="/">Echo</Link>
                 </span>
@@ -78,7 +78,7 @@ const Header = () => {
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8 ml-36">
+            <nav className="hidden md:flex items-center space-x-8 ml-15">
               {navItems.map((item) => (
                 <a
                   key={item.label}
@@ -109,7 +109,7 @@ const Header = () => {
               {/* Auth Buttons */}
               {isSignedIn ? (
                 <>
-                  <div className="hidden sm:flex items-center space-x-2 md:space-x-5">
+                  <div className="hidden sm:flex items-center space-x-2 md:space-x-5 mr-3">
                     <Button
                       asChild
                       size="sm"
@@ -135,7 +135,7 @@ const Header = () => {
                       <Link href="#get-started">Get Started</Link>
                     </Button>
                     <SignInButton>
-                      <Button variant="ghost" size="sm" >
+                      <Button variant="ghost" size="sm">
                         Sign In
                       </Button>
                     </SignInButton>
@@ -150,12 +150,20 @@ const Header = () => {
             </div>
 
             {/* Mobile Menu Button */}
+            <div className="md:hidden flex flex-row gap-2 ml-9">
+            <UserButton
+                afterSignOutUrl="/"
+                appearance={{
+                  baseTheme: theme === "dark" ? dark : undefined,
+                }}
+              />
             <Button
               variant="ghost"
               size="sm"
               className="md:hidden w-9 h-9 p-0"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
+              
               <div className="w-4 h-4 flex flex-col justify-center items-center">
                 <span
                   className={`w-4 h-0.5 bg-current transition-all duration-200 ${
@@ -169,6 +177,7 @@ const Header = () => {
                 />
               </div>
             </Button>
+            </div>
           </div>
 
           {/* Mobile Menu */}
@@ -194,25 +203,16 @@ const Header = () => {
                         size="sm"
                         className="hero-bg text-primary-foreground"
                       >
-                        <Link
-                          href="#feed"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
+                        <Link href="/feed" onClick={() => setIsMenuOpen(false)}>
                           Go to Feed
                         </Link>
                       </Button>
-                      <UserButton
-                        afterSignOutUrl="/"
-                        appearance={{
-                          baseTheme: theme === "dark" ? dark : undefined,
-                        }}
-                      />
+                      
                     </div>
                   </>
                 ) : (
                   <>
                     <div className="flex flex-col space-y-2 pt-4 border-t border-border">
-                      
                       <SignInButton>
                         <Button variant="ghost" size="sm">
                           Sign In
