@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -46,8 +45,25 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LocalEchoLogo } from "@/components/icons";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
+
+import { Separator } from "@/components/ui/separator";
+import { TrendingUp, CheckCircle } from "lucide-react";
+
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
+import { useTheme } from 'next-themes';
+import { dark } from '@clerk/themes';
+import { Spinner, type SpinnerProps } from '@/components/ui/shadcn-io/spinner';
+const variants: SpinnerProps['variant'][] = [
+  'default',
+  'circle',
+  'pinwheel',
+  'circle-filled',
+  'ellipsis',
+  'ring',
+  'bars',
+  'infinite',
+];
 
 
 // --- INLINED COMPONENTS ---
@@ -59,33 +75,45 @@ const navLinks = [
   { href: "/feed/reports", label: "My Reports", icon: FileText },
 ];
 
-function AppHeader() {
+export function AppHeader() {
+  const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
+
+  const toggleDarkMode = () => {
+    setTheme(theme === "dark" ? "light" : "dark"); // <-- Use setTheme to toggle
+  };
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const { isLoaded, isSignedIn, user } = useUser(); // Get user state from Clerk
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
+        {/* Logo and Brand Name */}
         <div className="flex items-center space-x-2 md:ml-8 ml-1">
-              <Image
-                src="/logo4.png" // path to your transparent PNG in /public
-                alt="LocalEcho Logo"
-                width={62} // increase size as needed
-                height={62}
-                className="object-contain md:-mr-2"
-              />
-              <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
-                <Link href="#front-page">Local </Link>
-                <span className="text-gradient">
-                  <Link href="#front-page">Echo</Link>
-                </span>
-              </span>
-            </div>
+          <Image
+            src="/logo4.png"
+            alt="LocalEcho Logo"
+            width={62}
+            height={62}
+            className="object-contain md:-mr-2"
+          />
+          <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
+            <Link href="#front-page">Local </Link>
+            <span className="text-gradient">
+              <Link href="/feed">Echo</Link>
+            </span>
+          </span>
+        </div>
 
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex flex-1 items-center justify-center space-x-1 ml-75">
           {navLinks.map((link) => (
             <Button asChild variant="ghost" key={link.label} className="text-muted-foreground hover:text-foreground">
-              <Link
-                href={link.href}
-                className="flex items-center gap-2 text-sm font-medium"
-              >
+              <Link href={link.href} className="flex items-center gap-2 text-sm font-medium">
                 <link.icon className="h-4 w-4" />
                 {link.label}
               </Link>
@@ -93,37 +121,39 @@ function AppHeader() {
           ))}
         </nav>
 
+        {/* Actions (Notifications, Theme Toggle, Auth) */}
         <div className="flex flex-1 items-center justify-end space-x-2">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                <Bell className="h-5 w-5" />
-                <span className="sr-only">Notifications</span>
-            </Button>
-            <ThemeToggle />
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full md:mr-10 mr-4">
-                        <Avatar className="h-10 w-10 border-2 border-transparent hover:border-primary transition-colors">
-                        <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
-                        <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                        <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">John Doe</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                            john.doe@example.com
-                        </p>
-                        </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                        <DropdownMenuItem><User className="mr-2 h-4 w-4"/> Profile</DropdownMenuItem>
-                        <DropdownMenuItem><Settings className="mr-2 h-4 w-4"/> Settings</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem><LogOut className="mr-2 h-4 w-4"/> Log out</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">Notifications</span>
+          </Button>
+          <ThemeToggle />
+
+          {/* Conditional rendering based on auth status */}
+          {isLoaded && isSignedIn ? (
+            <div className='mr-10 mt-1.5'>
+            <UserButton
+            appearance={{
+              baseTheme: theme === "dark" ? dark : undefined,
+            }} />
+            </div>
+          ) : (
+            <div className="hidden sm:flex items-center space-x-2">
+              {/* Assuming you have these Clerk buttons imported */}
+              <SignInButton>
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
+              </SignInButton>
+              <div className='mr-10'>
+              <SignUpButton>
+                <Button size="sm">
+                  Sign Up
+                </Button>
+              </SignUpButton>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>
@@ -367,17 +397,17 @@ function CreateIssueDialog(props: DialogProps) {
               </div>
           </div>
           <div className="grid gap-2">
-             <Label>Upload Image (Optional)</Label>
-            <div className="flex items-center justify-center w-full">
-                <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-secondary/50 hover:bg-secondary/80">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                        <UploadCloud className="w-8 h-8 mb-4 text-muted-foreground" />
-                        <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                        <p className="text-xs text-muted-foreground">PNG, JPG, or GIF</p>
-                    </div>
-                    <Input id="dropzone-file" type="file" className="hidden" />
-                </label>
-            </div> 
+               <Label>Upload Image (Optional)</Label>
+              <div className="flex items-center justify-center w-full">
+                  <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-secondary/50 hover:bg-secondary/80">
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <UploadCloud className="w-8 h-8 mb-4 text-muted-foreground" />
+                          <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                          <p className="text-xs text-muted-foreground">PNG, JPG, or GIF</p>
+                      </div>
+                      <Input id="dropzone-file" type="file" className="hidden" />
+                  </label>
+              </div>
           </div>
         </div>
         <DialogFooter>
@@ -388,13 +418,52 @@ function CreateIssueDialog(props: DialogProps) {
   );
 }
 
+function UnauthorizedAccess() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center px-4">
+      <div className="mb-0">
+        <Image src="/logo4.png" alt="LocalEcho" width={200} height={200} />
+      </div>
+      <h1 className="text-5xl font-extrabold text-primary font-headline tracking-tight mb-2">
+        Access Denied
+      </h1>
+      <p className="text-lg text-muted-foreground mb-6 max-w-lg">
+        You need to be signed in to view the community feed. Please sign in or create an account to get started.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4">
+        {/* Assuming you have these Clerk buttons */}
+        <SignInButton>
+          <Button size="lg">Sign In</Button>
+        </SignInButton>
+        <SignUpButton>
+          <Button variant="outline" size="lg">Sign Up</Button>
+        </SignUpButton>
+      </div>
+    </div>
+  );
+}
+
 
 // --- MAIN MAP PAGE ---
 
 export default function MapPage() {
+    // Moved all hook calls to the top of the component
+    const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    const { isLoaded, isSignedIn, user } = useUser();
     const [activeMobileTab, setActiveMobileTab] = useState<'feed' | 'map' | 'profile'>('map');
     const [isCreateIssueOpen, setCreateIssueOpen] = useState(false);
     const router = useRouter();
+    const pathname = usePathname();
+
+    // The useEffect hook is also a hook and must be called at the top level
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const toggleDarkMode = () => {
+        setTheme(theme === "dark" ? "light" : "dark");
+    };
     
     const handleTabChange = (tab: 'feed' | 'map' | 'profile') => {
         setActiveMobileTab(tab);
@@ -406,8 +475,26 @@ export default function MapPage() {
             router.push('/feed');
         }
     };
-
-
+    
+    if (!isLoaded) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <Spinner variant={'bars'} className='text-primary' size={64}/>
+            </div>
+        );
+    }
+    
+    if (!isSignedIn) {
+        return (
+            <div className="flex min-h-screen w-full flex-col bg-background1">
+                <AppHeader />
+                <main className="flex-1 container mx-auto">
+                    <UnauthorizedAccess />
+                </main>
+            </div>
+        );
+    }
+    
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <AppHeader />
@@ -427,4 +514,3 @@ export default function MapPage() {
         </div>
     );
 }
-

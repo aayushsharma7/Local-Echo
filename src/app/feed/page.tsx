@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -51,6 +51,20 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Separator } from "@/components/ui/separator";
 import { TrendingUp, CheckCircle } from "lucide-react";
 import { usePathname } from 'next/navigation';
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
+import { useTheme } from 'next-themes';
+import { dark } from '@clerk/themes';
+import { Spinner, type SpinnerProps } from '@/components/ui/shadcn-io/spinner';
+const variants: SpinnerProps['variant'][] = [
+  'default',
+  'circle',
+  'pinwheel',
+  'circle-filled',
+  'ellipsis',
+  'ring',
+  'bars',
+  'infinite',
+];
 
 // --- INLINED COMPONENTS ---
 
@@ -82,74 +96,112 @@ const navLinks = [
   { href: "/feed/reports", label: "My Reports", icon: FileText },
 ];
 
-function AppHeader() {
+export function AppHeader() {
+  const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
+
+  const toggleDarkMode = () => {
+    setTheme(theme === "dark" ? "light" : "dark"); // <-- Use setTheme to toggle
+  };
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const { isLoaded, isSignedIn, user } = useUser(); // Get user state from Clerk
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
+        {/* Logo and Brand Name */}
         <div className="flex items-center space-x-2 md:ml-8 ml-1">
-              <Image
-                src="/logo4.png" // path to your transparent PNG in /public
-                alt="LocalEcho Logo"
-                width={62} // increase size as needed
-                height={62}
-                className="object-contain md:-mr-2"
-              />
-              <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
-                <Link href="#front-page">Local </Link>
-                <span className="text-gradient">
-                  <Link href="/feed">Echo</Link>
-                </span>
-              </span>
-            </div>
+          <Image
+            src="/logo4.png"
+            alt="LocalEcho Logo"
+            width={62}
+            height={62}
+            className="object-contain md:-mr-2"
+          />
+          <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
+            <Link href="#front-page">Local </Link>
+            <span className="text-gradient">
+              <Link href="/feed">Echo</Link>
+            </span>
+          </span>
+        </div>
 
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex flex-1 items-center justify-center space-x-1 ml-75">
           {navLinks.map((link) => (
             <Button asChild variant="ghost" key={link.label} className="text-muted-foreground hover:text-foreground">
-              <Link
-                href={link.href}
-                className="flex items-center gap-2 text-sm font-medium"
-              >
-                <link.icon className="h-4 w-4" />
+              <Link href={link.href} className="flex items-center gap-2 text-sm font-medium">
+                <link.icon className="h-4 w-4" /> 
                 {link.label}
               </Link>
             </Button>
           ))}
         </nav>
 
+        {/* Actions (Notifications, Theme Toggle, Auth) */}
         <div className="flex flex-1 items-center justify-end space-x-2">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                <Bell className="h-5 w-5" />
-                <span className="sr-only">Notifications</span>
-            </Button>
-            <ThemeToggle />
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full md:mr-10 mr-4">
-                        <Avatar className="h-10 w-10 border-2 border-transparent hover:border-primary transition-colors">
-                        <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
-                        <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                        <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">John Doe</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                            john.doe@example.com
-                        </p>
-                        </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                        <DropdownMenuItem><User className="mr-2 h-4 w-4"/> Profile</DropdownMenuItem>
-                        <DropdownMenuItem><Settings className="mr-2 h-4 w-4"/> Settings</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem><LogOut className="mr-2 h-4 w-4"/> Log out</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">Notifications</span>
+          </Button>
+          <ThemeToggle />
+
+          {/* Conditional rendering based on auth status */}
+          {isLoaded && isSignedIn ? (
+            <div className='md:mr-10 mr-3 mt-1.5'>
+            <UserButton 
+            appearance={{
+              baseTheme: theme === "dark" ? dark : undefined,
+            }} />
+            </div>
+          ) : (
+            <div className="hidden sm:flex items-center space-x-2">
+              {/* Assuming you have these Clerk buttons imported */}
+              <SignInButton>
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
+              </SignInButton>
+              <div className='md:mr-10'>
+              <SignUpButton>
+                <Button size="sm">
+                  Sign Up
+                </Button>
+              </SignUpButton>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>
+  );
+}
+
+function UnauthorizedAccess() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center px-4">
+      <div className="-mb-10">
+        <Image src="/logo4.png" alt="LocalEcho" width={250} height={250} />
+      </div>
+      <h1 className="text-5xl md:text-6xl font-extrabold text-gradient font-headline tracking-tight mb-5">
+        Welcome to LocalEcho
+      </h1>
+      <p className="text-lg text-muted-foreground mb-6 max-w-lg">
+        Sign in to view real-time community reports, track local issues, and connect with your neighbors.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <SignInButton>
+          <Button size="lg">Sign In</Button>
+        </SignInButton>
+        <SignUpButton>
+          <Button variant="outline" size="lg">Sign Up</Button>
+        </SignUpButton>
+      </div>
+    </div>
   );
 }
 
@@ -568,6 +620,37 @@ export default function FeedPage() {
       router.push('/feed');
     }
   };
+  const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
+
+  const toggleDarkMode = () => {
+    setTheme(theme === "dark" ? "light" : "dark"); // <-- Use setTheme to toggle
+  };
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const { isLoaded, isSignedIn, user } = useUser(); // Get user state from Clerk
+
+  if (!isLoaded) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+         <Spinner variant={'bars'} className='text-primary' size={64}/>
+      </div>
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <div className="flex min-h-screen w-full flex-col bg-background1">
+        <AppHeader />
+        <main className="flex-1 container mx-auto">
+          <UnauthorizedAccess />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background1">

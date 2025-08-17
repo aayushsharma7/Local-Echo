@@ -30,7 +30,6 @@ import { useTheme } from "next-themes"; // <-- Import useTheme
 
 const Header = () => {
   const { isSignedIn } = useUser();
-  const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navItems = [
@@ -44,6 +43,7 @@ const Header = () => {
   // const [darkMode, setDarkMode] = useState(false);
   // useEffect(() => { ... }, []);
   // useEffect(() => { ... }, [darkMode]);
+  const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
 
   const toggleDarkMode = () => {
     setTheme(theme === "dark" ? "light" : "dark"); // <-- Use setTheme to toggle
@@ -97,7 +97,7 @@ const Header = () => {
                 variant="ghost"
                 size="sm"
                 onClick={toggleDarkMode}
-                className="w-9 h-9 p-0 -mr-35 translate-x-12 md:-mr-0 md:translate-x-0 "
+                className="w-9 h-9 p-0 -mr-35 translate-x-18 md:-mr-0 md:translate-x-0"
               >
                 {mounted && theme === "dark" ? (
                   <Sun className="w-4 h-4" />
@@ -151,12 +151,12 @@ const Header = () => {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex flex-row gap-2 ml-9">
-            <UserButton
+            {/* <UserButton
                 afterSignOutUrl="/"
                 appearance={{
                   baseTheme: theme === "dark" ? dark : undefined,
                 }}
-              />
+              /> */}
             <Button
               variant="ghost"
               size="sm"

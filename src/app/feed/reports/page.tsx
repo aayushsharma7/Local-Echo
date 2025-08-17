@@ -1,8 +1,6 @@
-
-
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import {
@@ -30,6 +28,45 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { UploadCloud } from "lucide-react";
+import type { DialogProps } from "@radix-ui/react-dialog";
+
+import { Separator } from "@/components/ui/separator";
+
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
+import { useTheme } from 'next-themes';
+import { dark } from '@clerk/themes';
+import { Spinner, type SpinnerProps } from '@/components/ui/shadcn-io/spinner';
+const variants: SpinnerProps['variant'][] = [
+  'default',
+  'circle',
+  'pinwheel',
+  'circle-filled',
+  'ellipsis',
+  'ring',
+  'bars',
+  'infinite',
+];
+
 // --- INLINED COMPONENTS ---
 
 // Header Component
@@ -39,33 +76,44 @@ const navLinks = [
   { href: "/feed/reports", label: "My Reports", icon: FileText },
 ];
 
-function AppHeader() {
+export function AppHeader() {
+  const { theme, setTheme } = useTheme();
+  const toggleDarkMode = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  const { isLoaded, isSignedIn, user } = useUser();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 max-w-screen-2xl items-center">
+        {/* Logo and Brand Name */}
         <div className="flex items-center space-x-2 md:ml-8 ml-1">
-              <Image
-                src="/logo4.png" // path to your transparent PNG in /public
-                alt="LocalEcho Logo"
-                width={62} // increase size as needed
-                height={62}
-                className="object-contain md:-mr-2"
-              />
-              <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
-                <Link href="#front-page">Local </Link>
-                <span className="text-gradient">
-                  <Link href="#front-page">Echo</Link>
-                </span>
-              </span>
-            </div>
+          <Image
+            src="/logo4.png"
+            alt="LocalEcho Logo"
+            width={62}
+            height={62}
+            className="object-contain md:-mr-2"
+          />
+          <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
+            <Link href="#front-page">Local </Link>
+            <span className="text-gradient">
+              <Link href="/feed">Echo</Link>
+            </span>
+          </span>
+        </div>
 
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex flex-1 items-center justify-center space-x-1 ml-75">
           {navLinks.map((link) => (
             <Button asChild variant="ghost" key={link.label} className="text-muted-foreground hover:text-foreground">
-              <Link
-                href={link.href}
-                className="flex items-center gap-2 text-sm font-medium"
-              >
+              <Link href={link.href} className="flex items-center gap-2 text-sm font-medium">
                 <link.icon className="h-4 w-4" />
                 {link.label}
               </Link>
@@ -73,37 +121,38 @@ function AppHeader() {
           ))}
         </nav>
 
+        {/* Actions (Notifications, Theme Toggle, Auth) */}
         <div className="flex flex-1 items-center justify-end space-x-2">
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                <Bell className="h-5 w-5" />
-                <span className="sr-only">Notifications</span>
-            </Button>
-            <ThemeToggle />
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full md:mr-10 mr-4">
-                        <Avatar className="h-10 w-10 border-2 border-transparent hover:border-primary transition-colors">
-                        <AvatarImage src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
-                        <AvatarFallback>U</AvatarFallback>
-                        </Avatar>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                        <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">John Doe</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                            john.doe@example.com
-                        </p>
-                        </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                        <DropdownMenuItem><User className="mr-2 h-4 w-4"/> Profile</DropdownMenuItem>
-                        <DropdownMenuItem><Settings className="mr-2 h-4 w-4"/> Settings</DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem><LogOut className="mr-2 h-4 w-4"/> Log out</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+          <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+            <Bell className="h-5 w-5" />
+            <span className="sr-only">Notifications</span>
+          </Button>
+          <ThemeToggle />
+
+          {/* Conditional rendering based on auth status */}
+          {isLoaded && isSignedIn ? (
+            <div className='mr-10 mt-1.5'>
+              <UserButton
+                appearance={{
+                  baseTheme: theme === "dark" ? dark : undefined,
+                }} />
+            </div>
+          ) : (
+            <div className="hidden sm:flex items-center space-x-2">
+              <SignInButton>
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
+              </SignInButton>
+              <div className='mr-10'>
+                <SignUpButton>
+                  <Button size="sm">
+                    Sign Up
+                  </Button>
+                </SignUpButton>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>
@@ -153,61 +202,85 @@ const userIssues = [
   },
 ];
 
+function UnauthorizedAccess() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)] text-center px-4">
+      <div className="mb-0">
+        <Image src="/logo4.png" alt="LocalEcho" width={200} height={200} />
+      </div>
+      <h1 className="text-5xl font-extrabold text-primary font-headline tracking-tight mb-2">
+        Access Denied
+      </h1>
+      <p className="text-lg text-muted-foreground mb-6 max-w-lg">
+        You need to be signed in to view the community feed. Please sign in or create an account to get started.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <SignInButton>
+          <Button size="lg">Sign In</Button>
+        </SignInButton>
+        <SignUpButton>
+          <Button variant="outline" size="lg">Sign Up</Button>
+        </SignUpButton>
+      </div>
+    </div>
+  );
+}
+
 function MyReports() {
   return (
     <div className="w-full space-y-4">
       {userIssues.map((issue) => (
         <Card key={issue.id} className="bg-card/60 backdrop-blur-sm border-border/50 overflow-hidden">
           <div className="grid grid-cols-1">
-              <div className="p-4 -mt-5">
-                  <div className="flex items-start justify-between">
-                      <div>
-                          <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-headline font-semibold text-lg">{issue.title}</h3>
-                              <Badge variant={issue.statusVariant as any}>{issue.status}</Badge>
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                          Reported {issue.time}
-                          </p>
-                      </div>
+            <div className="p-4 -mt-5">
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-headline font-semibold text-lg">{issue.title}</h3>
+                    <Badge variant={issue.statusVariant as any}>{issue.status}</Badge>
                   </div>
-                  <p className="text-sm my-3">{issue.description}</p>
-                  
-                  {issue.image && (
-                      <div className="rounded-lg overflow-hidden border mb-3">
-                          <Image
-                              src={issue.image}
-                              alt={`Issue reported for ${issue.title}`}
-                              width={600}
-                              height={400}
-                              className="w-full h-auto object-cover"
-                              data-ai-hint={issue.imageHint}
-                          />
-                      </div>
-                  )}
-
-                  <div className="flex flex-wrap gap-2 mb-3">
-                      {issue.tags.map(tag => <Badge key={tag} variant="secondary" className="capitalize">{tag}</Badge>)}
-                  </div>
-                  <div className="flex items-center justify-between text-muted-foreground -mb-6">
-                      <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-1.5 text-sm">
-                              <ThumbsUp className="w-4 h-4" /> <span>{issue.upvotes}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 text-sm">
-                              <MessageCircle className="w-4 h-4" /> <span>{issue.comments}</span>
-                          </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                          <Button variant="outline" size="sm" className="flex items-center gap-1.5">
-                              <Edit className="w-3 h-3" /> <span>Edit</span>
-                          </Button>
-                          <Button variant="destructive" size="sm" className="flex items-center gap-1.5">
-                              <Trash2 className="w-3 h-3 " /> <span>Delete</span>
-                          </Button>
-                      </div>
-                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Reported {issue.time}
+                  </p>
+                </div>
               </div>
+              <p className="text-sm my-3">{issue.description}</p>
+
+              {issue.image && (
+                <div className="rounded-lg overflow-hidden border mb-3">
+                  <Image
+                    src={issue.image}
+                    alt={`Issue reported for ${issue.title}`}
+                    width={600}
+                    height={400}
+                    className="w-full h-auto object-cover"
+                    data-ai-hint={issue.imageHint}
+                  />
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-2 mb-3">
+                {issue.tags.map(tag => <Badge key={tag} variant="secondary" className="capitalize">{tag}</Badge>)}
+              </div>
+              <div className="flex items-center justify-between text-muted-foreground -mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <ThumbsUp className="w-4 h-4" /> <span>{issue.upvotes}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-sm">
+                    <MessageCircle className="w-4 h-4" /> <span>{issue.comments}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" className="flex items-center gap-1.5">
+                    <Edit className="w-3 h-3" /> <span>Edit</span>
+                  </Button>
+                  <Button variant="destructive" size="sm" className="flex items-center gap-1.5">
+                    <Trash2 className="w-3 h-3 " /> <span>Delete</span>
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </Card>
       ))}
@@ -233,7 +306,7 @@ function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
   const handlePress = (tabId: 'feed' | 'map' | 'profile', href: string) => {
     onTabChange(tabId);
     if (pathname !== href) {
-        router.push(href);
+      router.push(href);
     }
   }
 
@@ -258,35 +331,35 @@ function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
 
 // My Reports Stats Component
 function MyReportsStats() {
-    return (
-        <Card className="md:ml-10 bg-card/60 backdrop-blur-sm border-border/50">
-            <CardHeader>
-                <div className="flex items-center gap-3">
-                    <FileText className="w-6 h-6 text-primary" />
-                    <CardTitle className="font-headline text-2xl">My Reports</CardTitle>
-                </div>
-              <CardDescription>A list of issues you have reported.</CardDescription>
-            </CardHeader>
-            <CardContent className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                    <p className="text-2xl font-bold font-headline text-primary">3</p>
-                    <p className="text-xs text-muted-foreground">Total Reports</p>
-                </div>
-                <div>
-                    <p className="text-2xl font-bold font-headline text-green-500 flex items-center justify-center gap-2">
-                      <CheckCircle className="w-5 h-5" /> 1
-                    </p>
-                    <p className="text-xs text-muted-foreground">Resolved</p>
-                </div>
-                <div>
-                    <p className="text-2xl font-bold font-headline text-amber-500 flex items-center justify-center gap-2">
-                      <AlertTriangle className="w-5 h-5" /> 2
-                    </p>
-                    <p className="text-xs text-muted-foreground">Active</p>
-                </div>
-            </CardContent>
-      </Card>
-    );
+  return (
+    <Card className="md:ml-10 bg-card/60 backdrop-blur-sm border-border/50">
+      <CardHeader>
+        <div className="flex items-center gap-3">
+          <FileText className="w-6 h-6 text-primary" />
+          <CardTitle className="font-headline text-2xl">My Reports</CardTitle>
+        </div>
+        <CardDescription>A list of issues you have reported.</CardDescription>
+      </CardHeader>
+      <CardContent className="grid grid-cols-3 gap-4 text-center">
+        <div>
+          <p className="text-2xl font-bold font-headline text-primary">3</p>
+          <p className="text-xs text-muted-foreground">Total Reports</p>
+        </div>
+        <div>
+          <p className="text-2xl font-bold font-headline text-green-500 flex items-center justify-center gap-2">
+            <CheckCircle className="w-5 h-5" /> 1
+          </p>
+          <p className="text-xs text-muted-foreground">Resolved</p>
+        </div>
+        <div>
+          <p className="text-2xl font-bold font-headline text-amber-500 flex items-center justify-center gap-2">
+            <AlertTriangle className="w-5 h-5" /> 2
+          </p>
+          <p className="text-xs text-muted-foreground">Active</p>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 // Stats Panel Component
@@ -303,20 +376,20 @@ function StatsPanel() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-2 gap-4 text-center">
-            <div>
-                <p className="text-3xl font-bold font-headline text-primary">1,492</p>
-                <p className="text-xs text-muted-foreground">Total Reports</p>
-            </div>
-            <div>
-                <p className="text-3xl font-bold font-headline text-green-500">834</p>
-                <p className="text-xs text-muted-foreground">Resolved</p>
-            </div>
+          <div>
+            <p className="text-3xl font-bold font-headline text-primary">1,492</p>
+            <p className="text-xs text-muted-foreground">Total Reports</p>
+          </div>
+          <div>
+            <p className="text-3xl font-bold font-headline text-green-500">834</p>
+            <p className="text-xs text-muted-foreground">Resolved</p>
+          </div>
         </CardContent>
       </Card>
 
       <Card className="bg-card/60 backdrop-blur-sm border-border/50">
         <CardHeader>
-            <CardTitle className="font-headline text-lg flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" />Trending Tags</CardTitle>
+          <CardTitle className="font-headline text-lg flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" />Trending Tags</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -351,71 +424,102 @@ function UserProfileCard() {
 function TrendingTagsPanel() {
   return (
     <Card className="sticky top-20 bg-card/60 backdrop-blur-sm border-border/50">
-        <CardHeader>
-            <CardTitle className="font-headline text-lg flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" />Trending Tags</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {trendingTagsData.map((tag) => (
-              <Badge key={tag} variant="secondary" className="capitalize cursor-pointer hover:bg-primary/20 transition-colors">{tag}</Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <CardHeader>
+        <CardTitle className="font-headline text-lg flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" />Trending Tags</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-wrap gap-2">
+          {trendingTagsData.map((tag) => (
+            <Badge key={tag} variant="secondary" className="capitalize cursor-pointer hover:bg-primary/20 transition-colors">{tag}</Badge>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
 // --- MAIN REPORTS PAGE ---
 
 export default function ReportsPage() {
-    const [activeMobileTab, setActiveMobileTab] = useState<'feed' | 'map' | 'profile'>('profile');
-    const router = useRouter();
+  // Moved all hook calls to the top of the component
+  const [activeMobileTab, setActiveMobileTab] = useState<'feed' | 'map' | 'profile'>('profile');
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { isLoaded, isSignedIn, user } = useUser();
+  const pathname = usePathname();
 
-    const handleTabChange = (tab: 'feed' | 'map' | 'profile') => {
-        setActiveMobileTab(tab);
-        if (tab === 'map') {
-            router.push('/feed/map');
-        } else if (tab === 'profile') {
-            router.push('/feed/reports');
-        } else {
-            router.push('/feed');
-        }
-    };
+  // The useEffect hook is also a hook and must be called at the top level
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
+  const toggleDarkMode = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
+  const handleTabChange = (tab: 'feed' | 'map' | 'profile') => {
+    setActiveMobileTab(tab);
+    if (tab === 'map') {
+      router.push('/feed/map');
+    } else if (tab === 'profile') {
+      router.push('/feed/reports');
+    } else {
+      router.push('/feed');
+    }
+  };
+
+  if (!isLoaded) {
     return (
-        <div className="flex min-h-screen w-full flex-col bg-background">
-            <AppHeader />
-            <main className="flex-1 container mx-auto px-4 py-6 lg:pb-6 pb-24">
-                {/* Desktop Layout */}
-                <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-start">
-                    <div className="lg:col-span-3 space-y-6">
-                        <MyReportsStats />
-                        <UserProfileCard />
-                    </div>
-                    <div className="lg:col-span-6">
-                        <MyReports />
-                    </div>
-                    <div className="lg:col-span-3">
-                        <StatsPanel />
-                    </div>
-                </div>
-                
-                {/* Mobile Layout */}
-                <div className="lg:hidden">
-                    <MyReportsStats />
-                    <div className='my-4' />
-                    <UserProfileCard />
-                    
-                    <div className='my-4' />
-                    <MyReports />
-                    
-                    {/* <div className='my-4' />
-                    <TrendingTagsPanel /> */}
-                </div>
-            </main>
-            <MobileNav activeTab={activeMobileTab} onTabChange={handleTabChange} />
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner variant={'bars'} className='text-primary' size={64} />
+      </div>
     );
-}
+  }
 
+  if (!isSignedIn) {
+    return (
+      <div className="flex min-h-screen w-full flex-col bg-background1">
+        <AppHeader />
+        <main className="flex-1 container mx-auto">
+          <UnauthorizedAccess />
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <AppHeader />
+      <main className="flex-1 container mx-auto px-4 py-6 lg:pb-6 pb-24">
+        {/* Desktop Layout */}
+        <div className="hidden lg:grid lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-3 space-y-6">
+            <MyReportsStats />
+            <UserProfileCard />
+          </div>
+          <div className="lg:col-span-6">
+            <MyReports />
+          </div>
+          <div className="lg:col-span-3">
+            <StatsPanel />
+          </div>
+        </div>
+
+        {/* Mobile Layout */}
+        <div className="lg:hidden">
+          <MyReportsStats />
+          <div className='my-4' />
+          <UserProfileCard />
+
+          <div className='my-4' />
+          <MyReports />
+
+          {/* <div className='my-4' />
+          <TrendingTagsPanel /> */}
+        </div>
+      </main>
+      <MobileNav activeTab={activeMobileTab} onTabChange={handleTabChange} />
+    </div>
+  );
+}
