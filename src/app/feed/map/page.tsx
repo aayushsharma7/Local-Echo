@@ -75,7 +75,7 @@ const navLinks = [
   { href: "/feed/reports", label: "My Reports", icon: FileText },
 ];
 
-export function AppHeader() {
+function AppHeader() {
   const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
 
   const toggleDarkMode = () => {
@@ -131,11 +131,11 @@ export function AppHeader() {
 
           {/* Conditional rendering based on auth status */}
           {isLoaded && isSignedIn ? (
-            <div className='mr-10 mt-1.5'>
-            <UserButton
-            appearance={{
-              baseTheme: theme === "dark" ? dark : undefined,
-            }} />
+            <div className='md:mr-10 mr-3 mt-1.5'>
+              <UserButton
+                appearance={{
+                  baseTheme: theme === "dark" ? dark : undefined,
+                }} />
             </div>
           ) : (
             <div className="hidden sm:flex items-center space-x-2">
@@ -145,12 +145,12 @@ export function AppHeader() {
                   Sign In
                 </Button>
               </SignInButton>
-              <div className='mr-10'>
-              <SignUpButton>
-                <Button size="sm">
-                  Sign Up
-                </Button>
-              </SignUpButton>
+              <div className='md:mr-10'>
+                <SignUpButton>
+                  <Button size="sm">
+                    Sign Up
+                  </Button>
+                </SignUpButton>
               </div>
             </div>
           )}
@@ -162,11 +162,11 @@ export function AppHeader() {
 
 // Map Panel Component
 const issuesOnMap = [
-    { id: 'pothole1', emoji: '🕳️', top: '25%', left: '30%', tooltip: 'Pothole on Oak St' },
-    { id: 'trash1', emoji: '🗑️', top: '55%', left: '65%', tooltip: 'Overflowing bins at Park' },
-    { id: 'light1', emoji: '💡', top: '70%', left: '20%', tooltip: 'Streetlight out on 5th Ave' },
-    { id: 'pothole2', emoji: '🕳️', top: '40%', left: '80%', tooltip: 'Deep pothole near City Hall' },
-    { id: 'trash2', emoji: '🗑️', top: '15%', left: '10%', tooltip: 'Illegal dumping on Elm St' },
+  { id: 'pothole1', emoji: '🕳️', top: '25%', left: '30%', tooltip: 'Pothole on Oak St' },
+  { id: 'trash1', emoji: '🗑️', top: '55%', left: '65%', tooltip: 'Overflowing bins at Park' },
+  { id: 'light1', emoji: '💡', top: '70%', left: '20%', tooltip: 'Streetlight out on 5th Ave' },
+  { id: 'pothole2', emoji: '🕳️', top: '40%', left: '80%', tooltip: 'Deep pothole near City Hall' },
+  { id: 'trash2', emoji: '🗑️', top: '15%', left: '10%', tooltip: 'Illegal dumping on Elm St' },
 ];
 
 function MapPanel() {
@@ -174,62 +174,62 @@ function MapPanel() {
     <Card className="md:ml-10 sticky top-20 bg-card/60 backdrop-blur-sm border-border/50 h-[calc(100vh-15rem)] lg:h-[calc(100vh-9rem)]">
       <CardHeader>
         <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-primary" />
-                <CardTitle className="font-headline text-lg">Issue Map</CardTitle>
-            </div>
-            <div className="flex items-center gap-1">
-                <Button variant="outline" size="icon" className="h-7 w-7"><Layers className="h-4 w-4"/></Button>
-                <Button variant="outline" size="icon" className="h-7 w-7"><Plus className="h-4 w-4"/></Button>
-                <Button variant="outline" size="icon" className="h-7 w-7"><Minus className="h-4 w-4"/></Button>
-            </div>
+          <div className="flex items-center gap-2">
+            <MapPin className="w-5 h-5 text-primary" />
+            <CardTitle className="font-headline text-lg">Issue Map</CardTitle>
+          </div>
+          <div className="flex items-center gap-1">
+            <Button variant="outline" size="icon" className="h-7 w-7"><Layers className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon" className="h-7 w-7"><Plus className="h-4 w-4" /></Button>
+            <Button variant="outline" size="icon" className="h-7 w-7"><Minus className="h-4 w-4" /></Button>
+          </div>
         </div>
         <CardDescription className="text-xs">Live issues reported by the community. Click an icon for details.</CardDescription>
       </CardHeader>
       <CardContent className="h-[calc(100%-8rem)] lg:h-[calc(100%-6rem)] p-0">
-  <TooltipProvider>
-    <div
-      className="relative w-full h-full rounded-b-lg overflow-hidden"
-      style={{
-        backgroundImage: 'url("/map-preview.png")', // Using the map image URL
-        backgroundSize: 'cover', // Ensures the image covers the entire area
-        backgroundPosition: 'center', // Centers the image
-      }}
-    >
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: 'linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)',
-          backgroundSize: '30px 30px',
-        }}
-      />
-      {issuesOnMap.map((issue, index) => (
-        <Tooltip key={issue.id}>
-          <TooltipTrigger asChild>
+        <TooltipProvider>
+          <div
+            className="relative w-full h-full rounded-b-lg overflow-hidden"
+            style={{
+              backgroundImage: 'url("/map-preview.png")', // Using the map image URL
+              backgroundSize: 'cover', // Ensures the image covers the entire area
+              backgroundPosition: 'center', // Centers the image
+            }}
+          >
             <div
-              className="absolute text-xl transition-transform hover:scale-125 z-10 cursor-pointer flex items-center justify-center rounded-full"
+              className="absolute inset-0 z-0"
               style={{
-                top: issue.top,
-                left: issue.left,
-                animation: `bounce 1.5s ease-in-out infinite`,
-                animationDelay: `${index * 0.15}s`,
-                width: '42px', // Ensure a fixed size for the circle
-                height: '42px', // Ensure a fixed size for the circle
-                backgroundColor: '#3d99f5', // Use your primary color variable
-                transform: `translate(-50%, -50%)`, // Center the entire pin container
+                backgroundImage: 'linear-gradient(hsl(var(--border)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px)',
+                backgroundSize: '30px 30px',
               }}
-            >
-              {issue.emoji}
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{issue.tooltip}</p>
-          </TooltipContent>
-        </Tooltip>
-      ))}
-    </div>
-  </TooltipProvider>
-</CardContent>
+            />
+            {issuesOnMap.map((issue, index) => (
+              <Tooltip key={issue.id}>
+                <TooltipTrigger asChild>
+                  <div
+                    className="absolute text-xl transition-transform hover:scale-125 z-10 cursor-pointer flex items-center justify-center rounded-full"
+                    style={{
+                      top: issue.top,
+                      left: issue.left,
+                      animation: `bounce 1.5s ease-in-out infinite`,
+                      animationDelay: `${index * 0.15}s`,
+                      width: '42px', // Ensure a fixed size for the circle
+                      height: '42px', // Ensure a fixed size for the circle
+                      backgroundColor: '#3d99f5', // Use your primary color variable
+                      transform: `translate(-50%, -50%)`, // Center the entire pin container
+                    }}
+                  >
+                    {issue.emoji}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{issue.tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+        </TooltipProvider>
+      </CardContent>
     </Card>
   );
 }
@@ -252,7 +252,7 @@ function MobileNav({ activeTab, onTabChange }: MobileNavProps) {
   const handlePress = (tabId: 'feed' | 'map' | 'profile', href: string) => {
     onTabChange(tabId);
     if (pathname !== href) {
-        router.push(href);
+      router.push(href);
     }
   }
 
@@ -287,35 +287,35 @@ const recentIssues = [
 function RecentIssuesList() {
   return (
     <Card className="md:mr-10 sticky top-20 bg-card border-border/50 max-h-[calc(100vh-28rem)] overflow-hidden">
-  <CardHeader className="bg-card z-10">
-    <div className="flex items-center gap-2">
-      <List className="w-5 h-5 text-primary" />
-      <CardTitle className="font-headline text-lg">Recent Issues</CardTitle>
-    </div>
-  </CardHeader>
-  <CardContent className="h-[calc(100%-8rem)] -mt-5 p-4 overflow-y-auto">
-    <div className="space-y-4">
-      {recentIssues.map((issue) => (
-        <div key={issue.id} className="flex items-center gap-4 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={issue.user.avatar} alt={issue.user.name} />
-            <AvatarFallback>{issue.user.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div className="grid gap-1">
-            <p className="text-sm font-medium leading-none">{issue.title}</p>
-            <p className="text-sm text-muted-foreground">{issue.location} &middot; {issue.time}</p>
-          </div>
+      <CardHeader className="bg-card z-10">
+        <div className="flex items-center gap-2">
+          <List className="w-5 h-5 text-primary" />
+          <CardTitle className="font-headline text-lg">Recent Issues</CardTitle>
         </div>
-      ))}
-    </div>
-  </CardContent>
-</Card>
+      </CardHeader>
+      <CardContent className="h-[calc(100%-8rem)] -mt-5 p-4 overflow-y-auto">
+        <div className="space-y-4">
+          {recentIssues.map((issue) => (
+            <div key={issue.id} className="flex items-center gap-4 cursor-pointer hover:bg-muted/50 p-2 rounded-md transition-colors">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={issue.user.avatar} alt={issue.user.name} />
+                <AvatarFallback>{issue.user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <div className="grid gap-1">
+                <p className="text-sm font-medium leading-none">{issue.title}</p>
+                <p className="text-sm text-muted-foreground">{issue.location} &middot; {issue.time}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
 // Quick Report Card
 type QuickReportCardProps = {
-    onReportClick: () => void;
+  onReportClick: () => void;
 }
 
 function QuickReportCard({ onReportClick }: QuickReportCardProps) {
@@ -323,18 +323,18 @@ function QuickReportCard({ onReportClick }: QuickReportCardProps) {
     <Card className="md:mr-10 bg-card/60 backdrop-blur-sm border-border/50">
       <CardHeader>
         <div className="flex items-center gap-2">
-            <PlusCircle className="w-5 h-5 text-primary" />
-            <CardTitle className="font-headline text-lg">Quick Report</CardTitle>
+          <PlusCircle className="w-5 h-5 text-primary" />
+          <CardTitle className="font-headline text-lg">Quick Report</CardTitle>
         </div>
         <CardDescription className="text-xs">Spotted an issue? Report it now.</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground mb-4">
-            Help improve your community by quickly reporting issues like potholes, graffiti, or broken streetlights.
+          Help improve your community by quickly reporting issues like potholes, graffiti, or broken streetlights.
         </p>
         <Button className="w-full" onClick={onReportClick}>
-            <Send className="w-4 h-4 mr-2" />
-            Report a New Issue
+          <Send className="w-4 h-4 mr-2" />
+          Report a New Issue
         </Button>
       </CardContent>
     </Card>
@@ -366,48 +366,48 @@ function CreateIssueDialog(props: DialogProps) {
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="issue-type">Problem Type</Label>
-                <Select>
-                    <SelectTrigger id="issue-type">
-                        <SelectValue placeholder="Select type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="pothole">Pothole</SelectItem>
-                        <SelectItem value="trash">Trash & Dumping</SelectItem>
-                        <SelectItem value="streetlight">Streetlight Outage</SelectItem>
-                        <SelectItem value="noise">Noise Complaint</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                </Select>
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="authority">Local Authority</Label>
-                <Select>
-                    <SelectTrigger id="authority">
-                        <SelectValue placeholder="Select authority" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="public-works">Public Works</SelectItem>
-                        <SelectItem value="parks-rec">Parks & Recreation</SelectItem>
-                        <SelectItem value="police">Police Dept.</SelectItem>
-                        <SelectItem value="transportation">Transportation</SelectItem>
-                    </SelectContent>
-                </Select>
-              </div>
+            <div className="grid gap-2">
+              <Label htmlFor="issue-type">Problem Type</Label>
+              <Select>
+                <SelectTrigger id="issue-type">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pothole">Pothole</SelectItem>
+                  <SelectItem value="trash">Trash & Dumping</SelectItem>
+                  <SelectItem value="streetlight">Streetlight Outage</SelectItem>
+                  <SelectItem value="noise">Noise Complaint</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="authority">Local Authority</Label>
+              <Select>
+                <SelectTrigger id="authority">
+                  <SelectValue placeholder="Select authority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="public-works">Public Works</SelectItem>
+                  <SelectItem value="parks-rec">Parks & Recreation</SelectItem>
+                  <SelectItem value="police">Police Dept.</SelectItem>
+                  <SelectItem value="transportation">Transportation</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
           <div className="grid gap-2">
-               <Label>Upload Image (Optional)</Label>
-              <div className="flex items-center justify-center w-full">
-                  <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-secondary/50 hover:bg-secondary/80">
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                          <UploadCloud className="w-8 h-8 mb-4 text-muted-foreground" />
-                          <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                          <p className="text-xs text-muted-foreground">PNG, JPG, or GIF</p>
-                      </div>
-                      <Input id="dropzone-file" type="file" className="hidden" />
-                  </label>
-              </div>
+            <Label>Upload Image (Optional)</Label>
+            <div className="flex items-center justify-center w-full">
+              <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-secondary/50 hover:bg-secondary/80">
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  <UploadCloud className="w-8 h-8 mb-4 text-muted-foreground" />
+                  <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+                  <p className="text-xs text-muted-foreground">PNG, JPG, or GIF</p>
+                </div>
+                <Input id="dropzone-file" type="file" className="hidden" />
+              </label>
+            </div>
           </div>
         </div>
         <DialogFooter>
@@ -431,7 +431,6 @@ function UnauthorizedAccess() {
         You need to be signed in to view the community feed. Please sign in or create an account to get started.
       </p>
       <div className="flex flex-col sm:flex-row gap-4">
-        {/* Assuming you have these Clerk buttons */}
         <SignInButton>
           <Button size="lg">Sign In</Button>
         </SignInButton>
@@ -447,70 +446,70 @@ function UnauthorizedAccess() {
 // --- MAIN MAP PAGE ---
 
 export default function MapPage() {
-    // Moved all hook calls to the top of the component
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false);
-    const { isLoaded, isSignedIn, user } = useUser();
-    const [activeMobileTab, setActiveMobileTab] = useState<'feed' | 'map' | 'profile'>('map');
-    const [isCreateIssueOpen, setCreateIssueOpen] = useState(false);
-    const router = useRouter();
-    const pathname = usePathname();
+  // Moved all hook calls to the top of the component
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { isLoaded, isSignedIn, user } = useUser();
+  const [activeMobileTab, setActiveMobileTab] = useState<'feed' | 'map' | 'profile'>('map');
+  const [isCreateIssueOpen, setCreateIssueOpen] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
-    // The useEffect hook is also a hook and must be called at the top level
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+  // The useEffect hook is also a hook and must be called at the top level
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    const toggleDarkMode = () => {
-        setTheme(theme === "dark" ? "light" : "dark");
-    };
-    
-    const handleTabChange = (tab: 'feed' | 'map' | 'profile') => {
-        setActiveMobileTab(tab);
-        if (tab === 'map') {
-            router.push('/feed/map');
-        } else if (tab === 'profile') {
-            router.push('/feed/reports');
-        } else {
-            router.push('/feed');
-        }
-    };
-    
-    if (!isLoaded) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <Spinner variant={'bars'} className='text-primary' size={64}/>
-            </div>
-        );
+  const toggleDarkMode = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const handleTabChange = (tab: 'feed' | 'map' | 'profile') => {
+    setActiveMobileTab(tab);
+    if (tab === 'map') {
+      router.push('/feed/map');
+    } else if (tab === 'profile') {
+      router.push('/feed/reports');
+    } else {
+      router.push('/feed');
     }
-    
-    if (!isSignedIn) {
-        return (
-            <div className="flex min-h-screen w-full flex-col bg-background1">
-                <AppHeader />
-                <main className="flex-1 container mx-auto">
-                    <UnauthorizedAccess />
-                </main>
-            </div>
-        );
-    }
-    
+  };
+
+  if (!isLoaded) {
     return (
-        <div className="flex min-h-screen w-full flex-col bg-background">
-            <AppHeader />
-            <main className="flex-1 container mx-auto px-4 py-6 lg:pb-6 pb-24">
-                <div className="lg:grid lg:grid-cols-12 gap-8 items-start">
-                    <div className="lg:col-span-8">
-                        <MapPanel />
-                    </div>
-                    <div className="lg:col-span-4 space-y-6 mt-6 md:mt-0">
-                        <RecentIssuesList />
-                        <QuickReportCard onReportClick={() => setCreateIssueOpen(true)} />
-                    </div>
-                </div>
-            </main>
-            <MobileNav activeTab={activeMobileTab} onTabChange={handleTabChange} />
-            <CreateIssueDialog open={isCreateIssueOpen} onOpenChange={setCreateIssueOpen} />
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner variant={'bars'} className='text-primary' size={64} />
+      </div>
     );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <div className="flex min-h-screen w-full flex-col bg-background1">
+        <AppHeader />
+        <main className="flex-1 container mx-auto">
+          <UnauthorizedAccess />
+        </main>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <AppHeader />
+      <main className="flex-1 container mx-auto px-4 py-6 lg:pb-6 pb-24">
+        <div className="lg:grid lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-8">
+            <MapPanel />
+          </div>
+          <div className="lg:col-span-4 space-y-6 mt-6 md:mt-0">
+            <RecentIssuesList />
+            <QuickReportCard onReportClick={() => setCreateIssueOpen(true)} />
+          </div>
+        </div>
+      </main>
+      <MobileNav activeTab={activeMobileTab} onTabChange={handleTabChange} />
+      <CreateIssueDialog open={isCreateIssueOpen} onOpenChange={setCreateIssueOpen} />
+    </div>
+  );
 }

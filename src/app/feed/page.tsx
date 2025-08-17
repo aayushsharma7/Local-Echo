@@ -96,7 +96,7 @@ const navLinks = [
   { href: "/feed/reports", label: "My Reports", icon: FileText },
 ];
 
-export function AppHeader() {
+function AppHeader() {
   const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
 
   const toggleDarkMode = () => {

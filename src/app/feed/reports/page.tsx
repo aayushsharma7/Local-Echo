@@ -76,10 +76,11 @@ const navLinks = [
   { href: "/feed/reports", label: "My Reports", icon: FileText },
 ];
 
-export function AppHeader() {
-  const { theme, setTheme } = useTheme();
+ function AppHeader() {
+  const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
+
   const toggleDarkMode = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(theme === "dark" ? "light" : "dark"); // <-- Use setTheme to toggle
   };
 
   const [mounted, setMounted] = useState(false);
@@ -87,7 +88,7 @@ export function AppHeader() {
   useEffect(() => {
     setMounted(true);
   }, []);
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoaded, isSignedIn, user } = useUser(); // Get user state from Clerk
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -114,7 +115,7 @@ export function AppHeader() {
           {navLinks.map((link) => (
             <Button asChild variant="ghost" key={link.label} className="text-muted-foreground hover:text-foreground">
               <Link href={link.href} className="flex items-center gap-2 text-sm font-medium">
-                <link.icon className="h-4 w-4" />
+                <link.icon className="h-4 w-4" /> 
                 {link.label}
               </Link>
             </Button>
@@ -131,25 +132,26 @@ export function AppHeader() {
 
           {/* Conditional rendering based on auth status */}
           {isLoaded && isSignedIn ? (
-            <div className='mr-10 mt-1.5'>
-              <UserButton
-                appearance={{
-                  baseTheme: theme === "dark" ? dark : undefined,
-                }} />
+            <div className='md:mr-10 mr-3 mt-1.5'>
+            <UserButton 
+            appearance={{
+              baseTheme: theme === "dark" ? dark : undefined,
+            }} />
             </div>
           ) : (
             <div className="hidden sm:flex items-center space-x-2">
+              {/* Assuming you have these Clerk buttons imported */}
               <SignInButton>
                 <Button variant="ghost" size="sm">
                   Sign In
                 </Button>
               </SignInButton>
-              <div className='mr-10'>
-                <SignUpButton>
-                  <Button size="sm">
-                    Sign Up
-                  </Button>
-                </SignUpButton>
+              <div className='md:mr-10'>
+              <SignUpButton>
+                <Button size="sm">
+                  Sign Up
+                </Button>
+              </SignUpButton>
               </div>
             </div>
           )}
