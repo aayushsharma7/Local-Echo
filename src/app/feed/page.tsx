@@ -97,7 +97,7 @@ function AppHeader() {
               <span className="text-xl font-semibold text-foreground -ml-5 md:-ml-0">
                 <Link href="#front-page">Local </Link>
                 <span className="text-gradient">
-                  <Link href="#front-page">Echo</Link>
+                  <Link href="/feed">Echo</Link>
                 </span>
               </span>
             </div>
