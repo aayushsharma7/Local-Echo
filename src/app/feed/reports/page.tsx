@@ -416,7 +416,20 @@ function UserProfileCard() {
         </Avatar>
         <h2 className="text-xl font-bold font-headline">John Doe</h2>
         <p className="text-sm text-muted-foreground">Springfield, USA</p>
-        <Button variant="outline" size="sm" className="mt-4">Edit Profile</Button>
+        <p className="text-sm text-muted-foreground mt-2 max-w-xs">
+            Passionate about community improvement and civic tech. Let's make our city better, one report at a time!
+        </p>
+        <div className="flex gap-6 my-4">
+            <div className="text-center">
+                <p className="font-bold text-lg">125</p>
+                <p className="text-xs text-muted-foreground">Followers</p>
+            </div>
+            <div className="text-center">
+                <p className="font-bold text-lg">88</p>
+                <p className="text-xs text-muted-foreground">Following</p>
+            </div>
+        </div>
+        <Button variant="outline" size="sm" className="mt-2">Edit Profile</Button>
       </CardContent>
     </Card>
   );
