@@ -91,7 +91,7 @@ export default function UserProfileCard() {
           
             <div className='mt-2 flex flex-row items-center justify-center '>
                 <MapPinIcon className='w-4 h-4 mr-2' />
-                <p className="text-sm text-muted-foreground">{data.location ?? '—'}</p>
+                <p className="text-sm text-muted-foreground">{data.location ?? '—-'}</p>
 
             </div>
             <Separator className="my-4" />
