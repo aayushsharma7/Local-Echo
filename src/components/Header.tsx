@@ -27,11 +27,28 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes"; // <-- Import useTheme
+import { syncUser } from "@/actions/user.action";
+
+// Import the Server Action
+
 
 const Header = () => {
-  const { isSignedIn } = useUser();
-
+  // --- All hooks must be called at the top level, before any conditional logic ---
+  const { isLoaded, isSignedIn } = useUser();
+  const { theme, setTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    
+    // Call the server action only when the user is signed in and the user data is loaded.
+    if (isLoaded && isSignedIn) {
+      console.log("User signed in. Syncing user data with database...");
+      syncUser(); //POST Request
+    }
+  }, [isLoaded, isSignedIn]); // The dependency array is crucial for this to work correctly
+
   const navItems = [
     { label: "Guide", href: "#how-it-works" },
     { label: "Features", href: "#features" },
@@ -39,21 +56,9 @@ const Header = () => {
     { label: "Testimonials", href: "#testimonials" },
   ];
 
-  // The state and effects below are no longer needed as useTheme handles it
-  // const [darkMode, setDarkMode] = useState(false);
-  // useEffect(() => { ... }, []);
-  // useEffect(() => { ... }, [darkMode]);
-  const { theme, setTheme } = useTheme(); // <-- Use the useTheme hook
-
   const toggleDarkMode = () => {
-    setTheme(theme === "dark" ? "light" : "dark"); // <-- Use setTheme to toggle
+    setTheme(theme === "dark" ? "light" : "dark");
   };
-
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <div>
@@ -151,32 +156,31 @@ const Header = () => {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex flex-row gap-2 ml-9">
-            {/* <UserButton
+              {/* <UserButton
                 afterSignOutUrl="/"
                 appearance={{
                   baseTheme: theme === "dark" ? dark : undefined,
                 }}
               /> */}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="md:hidden w-9 h-9 p-0"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              
-              <div className="w-4 h-4 flex flex-col justify-center items-center">
-                <span
-                  className={`w-4 h-0.5 bg-current transition-all duration-200 ${
-                    isMenuOpen ? "rotate-45 translate-y-0.5" : ""
-                  }`}
-                />
-                <span
-                  className={`w-4 h-0.5 bg-current transition-all duration-200 mt-1 ${
-                    isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""
-                  }`}
-                />
-              </div>
-            </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="md:hidden w-9 h-9 p-0"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+              >
+                <div className="w-4 h-4 flex flex-col justify-center items-center">
+                  <span
+                    className={`w-4 h-0.5 bg-current transition-all duration-200 ${
+                      isMenuOpen ? "rotate-45 translate-y-0.5" : ""
+                    }`}
+                  />
+                  <span
+                    className={`w-4 h-0.5 bg-current transition-all duration-200 mt-1 ${
+                      isMenuOpen ? "-rotate-45 -translate-y-0.5" : ""
+                    }`}
+                  />
+                </div>
+              </Button>
             </div>
           </div>
 
@@ -207,7 +211,6 @@ const Header = () => {
                           Go to Feed
                         </Link>
                       </Button>
-                      
                     </div>
                   </>
                 ) : (
