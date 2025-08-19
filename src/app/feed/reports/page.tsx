@@ -32,6 +32,7 @@ export default function ReportsPage() {
   const toggleDarkMode = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
+  
 
   const handleTabChange = (tab: 'feed' | 'map' | 'profile') => {
     setActiveMobileTab(tab);
