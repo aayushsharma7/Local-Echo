@@ -102,7 +102,7 @@ const Header = () => {
                 variant="ghost"
                 size="sm"
                 onClick={toggleDarkMode}
-                className="w-9 h-9 p-0 -mr-35 "
+                className="w-9 h-9 p-0 -mr-35 translate-x-18 md:-mr-0 md:translate-x-0"
               >
                 {mounted && theme === "dark" ? (
                   <Sun className="w-4 h-4" />
