@@ -285,7 +285,10 @@ const Issues = () => {
                     className="border-2 border-border bg-background/50 backdrop-blur-sm hover:bg-background/80 hover:scale-105 transition-all duration-300 px-8 py-6 text-lg font-semibold rounded-2xl"
                   >
                     <Users className="w-5 h-5 " />
+                    <Link href="/feed">
                     Explore Community
+                    </Link>
+                    
                   </Button>
                 </div>
 

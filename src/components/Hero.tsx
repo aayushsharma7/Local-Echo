@@ -97,11 +97,11 @@ const Hero = () => {
                   className="hero-bg text-primary-foreground glow-primary interactive"
                 >
                   <Camera className="w-5 h-5 mr-2" />
-                  Report an Issue
+                  <Link href="/feed">Report an Issue</Link>
                 </Button>
                 <Button size="lg" variant="outline" className="interactive">
                   <MapPin className="w-5 h-5 mr-2" />
-                  Explore Map
+                  <Link href="/feed">Explore Map</Link>
                 </Button>
               </div>
 

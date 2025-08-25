@@ -1,5 +1,6 @@
-import React from 'react'
-import { ThumbsUp, MessageCircle, Share2, Tag, MoreHorizontal, MapPin, Layers, Minus, SlidersHorizontal, Rss, User, Bell, LogOut, Settings, FileText } from "lucide-react";
+"use client"
+import React, { useState } from 'react'
+import { ThumbsUp, MessageCircle, Share2, Tag, MoreHorizontal, MapPin, Layers, Minus, SlidersHorizontal, Rss, User, Bell, LogOut, Settings, FileText, Loader2Icon, SendIcon } from "lucide-react";
 
 import {
   Dialog,
@@ -15,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { UploadCloud } from "lucide-react";
 import type { DialogProps } from "@radix-ui/react-dialog";
+import toast from "react-hot-toast";
 import {
   Select,
   SelectContent,
@@ -23,7 +25,41 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from './ui/button';
+import { useUser } from '@clerk/nextjs';
+import { createPost } from '@/actions/post.action';
 const CreateIssueDialog = (props: DialogProps) => {
+  const {user} = useUser();
+  const [content, setContent] = useState("");
+  const [title,setTitle] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
+  const [showImageUpload, setShowImageUpload] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!title.trim() && !content.trim() && !imageUrl) return;
+
+    setIsPosting(true);
+    try {
+      const result = await createPost(title, content, imageUrl);
+      if (result?.success) {
+        // reset the form
+        setTitle("");
+        setContent("");
+        setImageUrl("");
+        setShowImageUpload(false);
+
+        toast.success("Post created successfully");
+      }
+    } catch (error) {
+      console.error("Failed to create post:", error);
+      toast.error("Failed to create post");
+    } finally {
+      setIsPosting(false);
+    }
+  };
+
+
+
   return (
     <div>
       <Dialog {...props}>
@@ -37,14 +73,23 @@ const CreateIssueDialog = (props: DialogProps) => {
         <div className="grid gap-6 py-4">
           <div className="grid gap-2">
             <Label htmlFor="title">Issue Title</Label>
-            <Input id="title" placeholder="e.g., Large pothole on Main St" />
+            <Textarea
+              placeholder="e.g., Large pothole on Main St"
+              value={title}
+              className="min-h-[10px]"
+              onChange={(e) => setTitle(e.target.value)}
+              disabled={isPosting}
+            />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="description">Description</Label>
+           
             <Textarea
-              id="description"
-              placeholder="Describe the issue, its location, and any other relevant details."
+              placeholder="Describe the issue, its location, and any other relevant detals."
               className="min-h-[120px]"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              disabled={isPosting}
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -93,7 +138,23 @@ const CreateIssueDialog = (props: DialogProps) => {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" className="w-full sm:w-auto">Submit Report</Button>
+          <Button
+              className="w-full sm:w-auto"
+              onClick={handleSubmit}
+              disabled={(!content.trim() && !imageUrl) || isPosting}
+            >
+              {isPosting ? (
+                <>
+                  <Loader2Icon className="size-4 mr-2 animate-spin" />
+                  Posting...
+                </>
+              ) : (
+                <>
+                  <SendIcon className="size-4 mr-2" />
+                  Submit Report
+                </>
+              )}
+            </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
