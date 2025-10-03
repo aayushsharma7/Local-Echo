@@ -107,7 +107,7 @@ const MapPanel = () => {
             <div
               className="relative w-full h-full rounded-b-lg overflow-hidden"
               style={{
-                backgroundImage: "url('/map-preview.png')",
+                backgroundImage: "url('/map.png')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -124,12 +124,16 @@ const MapPanel = () => {
                 <Tooltip key={issue.id}>
                   <TooltipTrigger asChild>
                     <div
-                      className="absolute text-3xl transition-transform hover:scale-125 z-10 cursor-pointer"
+                      className="absolute text-xl transition-transform hover:scale-125 z-10 cursor-pointer flex items-center justify-center rounded-full"
                       style={{
                         top: issue.top,
-                        left: issue.left,
-                        animation: `bounce 1.5s ease-in-out infinite`,
-                        animationDelay: `${index * 0.15}s`,
+                      left: issue.left,
+                      animation: `bounce 1.5s ease-in-out infinite`,
+                      animationDelay: `${index * 0.15}s`,
+                      width: '42px', // Ensure a fixed size for the circle
+                      height: '42px', // Ensure a fixed size for the circle
+                      backgroundColor: '#D22B2B', // Use your primary color variable
+                      transform: `translate(-50%, -50%)`, // Center the entire pin container
                       }}
                     >
                       {issue.emoji}
