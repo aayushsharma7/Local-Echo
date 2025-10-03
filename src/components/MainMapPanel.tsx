@@ -43,7 +43,7 @@ const issuesOnMap = [
           <div
             className="relative w-full h-full rounded-b-lg overflow-hidden"
             style={{
-              backgroundImage: 'url("/map-preview.png")', // Using the map image URL
+              backgroundImage: 'url("/map.png")', // Using the map image URL
               backgroundSize: 'cover', // Ensures the image covers the entire area
               backgroundPosition: 'center', // Centers the image
             }}
@@ -67,7 +67,7 @@ const issuesOnMap = [
                       animationDelay: `${index * 0.15}s`,
                       width: '42px', // Ensure a fixed size for the circle
                       height: '42px', // Ensure a fixed size for the circle
-                      backgroundColor: '#3d99f5', // Use your primary color variable
+                      backgroundColor: '#D22B2B', // Use your primary color variable
                       transform: `translate(-50%, -50%)`, // Center the entire pin container
                     }}
                   >

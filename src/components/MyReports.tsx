@@ -17,9 +17,9 @@ const MyReports = () => {
     const userIssues = [
   {
     id: 1,
-    title: "Large pothole on Main St",
-    description: "Huge pothole at the intersection of Oak & Maple. Needs immediate attention.",
-    image: "/map-preview.png",
+    title: "Large pothole on Main Road - Sector 15",
+    description: "Huge pothole at the Sector 15 Main road. Needs immediate attention.",
+    image: "/pothole.png",
     imageHint: "pothole road",
     tags: ["pothole", "danger"],
     status: "In Progress",
@@ -31,7 +31,7 @@ const MyReports = () => {
   {
     id: 2,
     title: "Broken Streetlight",
-    description: "The streetlight on the corner of 5th and Pine has been out for a week.",
+    description: "The streetlight on the corner of Roundabout at Sector 11 has been out for a week.",
     image: null,
     imageHint: "",
     tags: ["streetlight", "safety"],
@@ -44,8 +44,8 @@ const MyReports = () => {
   {
     id: 3,
     title: "Overflowing Park Bins",
-    description: "Trash cans at Central Park near playground are full.",
-    image: "/map-preview.png",
+    description: "Trash cans at Sector 15 Park near playground are full.",
+    image: "/bins.jpg",
     imageHint: "trash park",
     tags: ["trash", "park"],
     status: "Submitted",

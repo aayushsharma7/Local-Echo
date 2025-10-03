@@ -12,11 +12,11 @@ import { List } from 'lucide-react';
 const RecentIssues = () => {
     // Recent Issues List Component
 const recentIssues = [
-  { id: 1, user: { name: "Jane Cooper", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" }, title: "Pothole on Oak St", location: "Oak & Maple St", time: "5m ago" },
-  { id: 2, user: { name: "Robert Fox", avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d" }, title: "Overflowing bins at Park", location: "Central Park", time: "1h ago" },
-  { id: 3, user: { name: "Emily Selman", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704e" }, title: "Streetlight out on 5th Ave", location: "5th Avenue", time: "2h ago" },
-  { id: 4, user: { name: "John Doe", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704f" }, title: "Deep pothole near City Hall", location: "City Hall", time: "4h ago" },
-  { id: 5, user: { name: "Sarah Smith", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704a" }, title: "Illegal dumping on Elm St", location: "Elm St", time: "5h ago" },
+  { id: 1, user: { name: "Asha Verma", avatar: "https://avatar.iran.liara.run/public/75" }, title: "Pothole in Sector 15", location: "Main Road 15", time: "5m ago" },
+  { id: 2, user: { name: "Robert Fox", avatar: "https://avatar.iran.liara.run/public/4" }, title: "Overflowing bins at Park", location: "Sector 15 Park", time: "1h ago" },
+  { id: 3, user: { name: "Robert Fox", avatar: "https://avatar.iran.liara.run/public/4" }, title: "Streetlight out Sector 11", location: "Sector 11", time: "2h ago" },
+  { id: 4, user: { name: "Asha Verma", avatar: "https://avatar.iran.liara.run/public/75" }, title: "Deep pothole near City Hall", location: "City Hall", time: "4h ago" },
+  { id: 5, user: { name: "Asha Verma", avatar: "https://avatar.iran.liara.run/public/75" }, title: "Illegal dumping on Elm St", location: "Elm St", time: "5h ago" },
 ];
   return (
     <div>

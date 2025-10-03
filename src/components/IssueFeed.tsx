@@ -20,9 +20,9 @@ const IssueFeed = () => {
     const issues = [
   {
     id: 1,
-    user: { name: "Jane Cooper", avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d" },
-    description: "Huge pothole at the intersection of Oak & Maple. Multiple cars have been hit. Needs immediate attention from the city.",
-    image: '/map-preview.png',
+    user: { name: "Asha Verma", avatar: "https://avatar.iran.liara.run/public/75" },
+    description: "Huge pothole at the Sector 15 Main road. Needs immediate attention.",
+    image: '/pothole.png',
     imageHint: "pothole road",
     tags: ["pothole", "danger"],
     location: "Oak & Maple St",
@@ -33,7 +33,7 @@ const IssueFeed = () => {
   },
   {
     id: 2,
-    user: { name: "Robert Fox", avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d" },
+    user: { name: "Robert Fox", avatar: "https://avatar.iran.liara.run/public/4" },
     description: "Overflowing trash cans at Central Park near the playground. It's becoming a health hazard for kids and families.",
     image: null,
     imageHint: "",
@@ -46,9 +46,9 @@ const IssueFeed = () => {
   },
   {
     id: 3,
-    user: { name: "City Works", avatar: "https://i.pravatar.cc/150?u=cityworks" },
-    description: "Streetlight outage reported on 5th Avenue between Pine and Elm has been resolved. Our team replaced the faulty bulb this morning.",
-    image: '/map-preview.png',
+    user: { name: "Ajay - RWA Manager", avatar: "https://avatar.iran.liara.run/public/31" },
+    description: "Streetlight outage reported on the corner of Roundabout at Sector 11 has been resolved. Our team replaced the faulty bulb this morning.",
+    image: '/light2.png',
     imageHint: "street light",
     tags: ["streetlight", "resolved"],
     location: "5th Avenue",
